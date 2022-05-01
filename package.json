@@ -1,0 +1,27 @@
+{
+  "name": "md-documentation",
+  "version": "1.0.0",
+  "description": "Generate html from markdown fiels.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx ts-node --project tsconfig.json index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenyasue/md-documentation.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kenyasue/md-documentation/issues"
+  },
+  "homepage": "https://github.com/kenyasue/md-documentation#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "html-format": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.30"
+  }
+}
