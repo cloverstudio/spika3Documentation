@@ -19,9 +19,14 @@
   "homepage": "https://github.com/kenyasue/md-documentation#readme",
   "dependencies": {
     "dotenv": "^16.0.0",
-    "html-format": "^1.0.1"
+    "html-format": "^1.0.1",
+    "html-prettify": "^1.0.6",
+    "markdown-it": "^13.0.1",
+    "pretty": "^2.0.0"
   },
   "devDependencies": {
-    "@types/node": "^17.0.30"
+    "@types/markdown-it": "^12.2.3",
+    "@types/node": "^17.0.30",
+    "@types/pretty": "^2.0.1"
   }
 }
