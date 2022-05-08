@@ -8,3 +8,4 @@ declare module "markdown-it-mark";
 declare module "markdown-it-deflist";
 declare module "markdown-it-abbr";
 declare module "markdown-it-container";
+declare module "html-webpack-plugin";
