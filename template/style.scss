@@ -1,0 +1,101 @@
+@import './markdown.scss';
+@import './reset.scss';
+@import './sytaxhighlight.scss';
+
+$background-color: #1e1e1e;
+$text-color: #f7f7f7;
+$primary-color: #303f9f;
+$secondary-color: #bdbdbd;
+$confirm-color: #00897b;
+$warning-color: #ffb300;
+$error-color: #c52b2b;
+$help-color: #673ab7;
+$container-padding: 20px;
+$text-padding: 5px;
+
+body {
+  background-color: $background-color;
+  color: $text-color;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+}
+
+a {
+  color: $text-color;
+  text-decoration: none;
+}
+
+a:hover{
+  text-decoration: underline;
+}
+
+mark {
+  background-color: $warning-color;
+}
+
+.contaier {
+  display: grid;
+  grid-template-areas: 
+    "header header"
+    "menu content"
+    "footer footer";
+  grid-template-columns: 20vw 80vw;
+  grid-template-rows: auto auto;
+  
+
+  .sidebar {
+    min-height: 80vh;
+    overflow-x: scroll;
+    grid-area: menu;
+    background: linear-gradient(90deg, $background-color 0%, lighten($background-color, 3%) 96%, lighten($background-color, 5%) 100%);
+    
+
+    header{
+      text-align: left;
+
+      h2{
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: $text-padding;
+      }
+
+      h3{
+        
+      }
+
+      padding: $container-padding;
+      background: linear-gradient(90deg, $primary-color 0%, lighten($primary-color, 3%) 96%, lighten($primary-color, 5%) 100%);
+
+    }
+
+    ul.top{
+      padding: $container-padding;
+    }
+
+    li{
+      list-style: none;
+      padding: 0 $text-padding 0 $text-padding;
+      margin: $text-padding 0 0 0;
+
+      ul{
+        margin-left: 10px;
+        padding-left: 15px;
+        border-left: 2px solid  lighten($background-color, 10%);
+      }
+    }
+  }
+
+  .content {
+    grid-area: content;
+    padding: $container-padding;
+  }
+
+  footer {
+    grid-area: footer;
+    padding: $container-padding;
+    background-color:  lighten($background-color, 5%);
+    text-align: right;
+    font-size: 1.0rem;
+    border-top: 1px solid $background-color;
+  }
+}

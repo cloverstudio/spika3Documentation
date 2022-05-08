@@ -1,9 +1,47 @@
 import { resolve } from 'path';
 import fs from 'fs';
-import { readdir, readFile, mkdir, writeFile, rm } from 'fs/promises'
+import { readdir, readFile, mkdir, writeFile, rm, copyFile } from 'fs/promises'
 import pretty from 'pretty';
 import md from 'markdown-it';
-const md2Html = new md();
+import sass from 'node-sass';
+import hljs from 'highlight.js';
+import markdownItHtml5Embed from 'markdown-it-html5-embed';
+import markdownItImageSize from 'markdown-it-imsize';
+import markdownItVideo from 'markdown-it-video';
+import markdownItEmoji from 'markdown-it-emoji';
+import markdownItSup from 'markdown-it-sup';
+import markdownItIns from 'markdown-it-ins';
+import markdownItMark from 'markdown-it-mark';
+import markdownItDeflist from 'markdown-it-deflist';
+import markdownItAbbr from 'markdown-it-abbr';
+import markdownItContainer from 'markdown-it-container';
+
+const md2Html = new md("default", {
+    highlight: (str: string, lang: string) => {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return hljs.highlight(str, { language: lang }).value;
+            } catch (__) { }
+        }
+
+        return ''; // use external default escaping
+    }
+});
+
+md2Html.use(markdownItHtml5Embed, {
+    html5embed: {
+        useImageSyntax: true, // Enables video/audio embed with ![]() syntax (default)
+        useLinkSyntax: true   // Enables video/audio embed with []() syntax
+    }
+}).use(markdownItImageSize)
+    .use(markdownItVideo)
+    .use(markdownItEmoji)
+    .use(markdownItSup)
+    .use(markdownItIns)
+    .use(markdownItMark)
+    .use(markdownItDeflist)
+    .use(markdownItAbbr)
+    .use(markdownItContainer);
 
 import 'dotenv/config';
 import { chdir } from 'process';
@@ -14,6 +52,7 @@ import { chdir } from 'process';
 //--------------------------------------------------------------------------
 
 enum DocumentType {
+    ASSET,
     Document,
     Folder
 }
@@ -35,8 +74,8 @@ type Document = {
 }
 
 
-const INDEXFILE = "index.md";
-
+const INDEXFILE = "00.index.md";
+const ParsableDocumentExtensions = ["md"];
 //--------------------------------------------------------------------------
 // Functions
 //--------------------------------------------------------------------------
@@ -52,7 +91,9 @@ const readFiles = async (path: string): Promise<Folder> => {
 
     // check index.md existance
     const indexFilePath = `${path}/${INDEXFILE}`;
-    if (!fs.existsSync(indexFilePath)) throw `${indexFilePath} doesn't exist.`
+    if (!fs.existsSync(indexFilePath)) {
+        lw(`${indexFilePath} doesn't exist. This folder will not be rendered in the menu.`);
+    }
 
     let indexDocument: Document | null = null;
 
@@ -63,10 +104,26 @@ const readFiles = async (path: string): Promise<Folder> => {
         const filePath: string = resolve(path, dirent.name);
 
         if (!dirent.isDirectory()) {
-            const document: Document = await readDocument(filePath);
-            if (fileName === INDEXFILE) indexDocument = document;
+            const extension = filePath.split(".").pop();
+            if (ParsableDocumentExtensions.find(ex => ex === extension)) {
 
-            return document;
+                // parse document 
+                const document: Document = await readDocument(filePath);
+                if (fileName === INDEXFILE) indexDocument = document;
+                return document;
+
+            } else {
+
+                // assets
+                return {
+                    path: relativePath,
+                    title: fileName,
+                    markdown: null,
+                    fileName: fileName,
+                    type: DocumentType.ASSET
+                }
+
+            }
 
         } else {
 
@@ -77,18 +134,16 @@ const readFiles = async (path: string): Promise<Folder> => {
 
     }));
 
-    const childresSorted = children.sort((a, b) => {
+    const childresSorted = children.filter(obj => !!obj).sort((a, b) => {
         return a.title.toUpperCase().localeCompare(a.title.toUpperCase(), 'en', { sensitivity: 'base' });
     });
-
-    if (!indexDocument) throw `${indexFilePath} faled to read index.md`;
 
     const folderName: string = path.split("/").pop();
 
     const currentFolder: Folder = {
         path: relativePath,
-        children: children,
-        title: indexDocument.title,
+        children: childresSorted,
+        title: indexDocument?.title || "",
         folderName: folderName,
         type: DocumentType.Folder
     }
@@ -127,8 +182,7 @@ const readDocument = async (path: string): Promise<Document> => {
 const generateMenuHtml = async (currentFolder: Folder, baseDepth: number, currentDepth: number): Promise<string> => {
 
     const relativePathPrefix = baseDepth > 0 ? [...Array(baseDepth)].reduce(res => `../${res}`, "") : "./";
-
-    const absoluteFolderPath = md2html(`${currentFolder.path}/${INDEXFILE}`);
+    const absoluteFolderPath = `${currentFolder.path}/index.html`;
 
     let template = ``;
     template += `<li><a href="${relativePathPrefix}${absoluteFolderPath.substring(1)}">${currentFolder.title}</a>`;
@@ -161,19 +215,25 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
     const templateContent = await readFile(templateFilePath, 'utf8');
     const distDir = resolve(`${OUTPUT_PATH}${currentFolder.path}`);
     const depth = baseTemplateParams?.depth || 0;
+    const relativePathPrefix = depth > 0 ? [...Array(depth)].reduce(res => `../${res}`, "") : "./";
 
     currentFolder.children.map(async (child: Document | Folder) => {
 
         if (child.type === DocumentType.Document) {
 
             const doc: Document = child as Document;
+
+            if (doc.fileName == INDEXFILE) doc.fileName = "index.html";
+
             const distPath = md2html(resolve(`${distDir}/${doc.fileName}`));
             const templateParams = { ...baseTemplateParams, title: currentFolder.title, content: md2Html.render(doc.markdown) };
             let html = templateContent;
 
-            const menuHTML = `<li>` + await generateMenuHtml(topFolder, depth, 0) + `</li>`;
+            const menuHTML = `<ul class="top">` + await generateMenuHtml(topFolder, depth, 0) + `</ul>`;
 
             templateParams.menu = menuHTML;
+            templateParams.styleSheetPath = `${relativePathPrefix}${STYLESHEET_NAME}`;
+
             Object.keys(templateParams).forEach((key: string) => {
                 const val = templateParams[key];
                 html = html.replace(new RegExp(`\{\{${key}\}\}`, 'g'), val);
@@ -186,6 +246,12 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
             const distPath = resolve(`${distDir}/${folder.folderName}`);
             await mkdir(distPath);
             await generateFiles(topFolder, folder, { ...baseTemplateParams, depth: depth + 1 });
+        } else if (child.type === DocumentType.ASSET) {
+            const doc: Document = child as Document;
+            const origPath = resolve(`${ROOT_PATH}/${doc.path}/${doc.fileName}`);
+            const distPath = resolve(`${distDir}/${doc.fileName}`)
+
+            await copyFile(origPath, distPath);
         }
 
     });
@@ -199,6 +265,7 @@ const md2html = (str: string): string => str.replace(/^(.+)\.md$/, (m, p1) => `$
 //--------------------------------------------------------------------------
 const ROOT_PATH = process.env.PAGE_DIR ? resolve(process.env.PAGE_DIR) : resolve('./pages');
 const OUTPUT_PATH = process.env.DIST_DIR ? resolve(process.env.DIST_DIR) : resolve('./dist');
+const STYLESHEET_NAME = "style.css";
 
 (async () => {
 
@@ -221,6 +288,23 @@ const OUTPUT_PATH = process.env.DIST_DIR ? resolve(process.env.DIST_DIR) : resol
 
         await generateFiles(entireFileStructure, entireFileStructure, {
             depth: 0
+        });
+
+        const templateStyleFilePath = resolve("./template/style.scss");
+        if (!fs.existsSync(templateStyleFilePath)) throw `template/style.scss doesn't exist.`
+
+        // build sass
+        sass.render({
+            file: './template/style.scss',
+        }, (err, result) => {
+
+            fs.writeFileSync(`${OUTPUT_PATH}/${STYLESHEET_NAME}`, result.css);
+
+            if (err) {
+                le(err);
+                throw "Failed to compile scss";
+            }
+
         });
 
         l(`Build finished.`);

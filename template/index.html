@@ -4,10 +4,27 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Markdown Documentation- {{title}}</title>
+        <link href="{{styleSheetPath}}" rel="stylesheet"></head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,900&family=VT323&display=swap" rel="stylesheet"> 
     </head>
 
     <body>
-        <div>{{menu}}</div>
-        <div>{{content}}</div>
+        <div class="contaier">
+            <div class="sidebar">
+
+                <header>
+                    <h2>MD2Doc</h2>
+                    <h3>Markdown based documentation generator.</h3>
+                </header>
+
+                {{menu}}
+            </div>
+            <div class="content markdown-body hljs">{{content}}</div>
+            <footer>
+                Powered by <a href="https://github.com/kenyasue/md-documentation">Markdown docmentation.</a>
+            </footer>
+        </div>
     </body>
 </html>

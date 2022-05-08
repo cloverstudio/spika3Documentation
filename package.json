@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx ts-node --project tsconfig.json index.ts"
+    "build": "npx ts-node --project tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -19,14 +19,27 @@
   "homepage": "https://github.com/kenyasue/md-documentation#readme",
   "dependencies": {
     "dotenv": "^16.0.0",
+    "highlight.js": "^11.5.1",
     "html-format": "^1.0.1",
     "html-prettify": "^1.0.6",
     "markdown-it": "^13.0.1",
+    "markdown-it-abbr": "^1.0.4",
+    "markdown-it-container": "^3.0.0",
+    "markdown-it-deflist": "^2.1.0",
+    "markdown-it-emoji": "^2.0.2",
+    "markdown-it-html5-embed": "^1.0.0",
+    "markdown-it-imsize": "^2.0.1",
+    "markdown-it-ins": "^3.0.1",
+    "markdown-it-mark": "^3.0.1",
+    "markdown-it-sup": "^1.0.0",
+    "markdown-it-video": "^0.6.3",
+    "node-sass": "^7.0.1",
     "pretty": "^2.0.0"
   },
   "devDependencies": {
     "@types/markdown-it": "^12.2.3",
     "@types/node": "^17.0.30",
+    "@types/node-sass": "^4.11.2",
     "@types/pretty": "^2.0.1"
   }
 }

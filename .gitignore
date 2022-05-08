@@ -108,6 +108,6 @@ dist
 ./**/*.js
 ./**/*.js.map
 
-pages
 dist
 build
+assets
