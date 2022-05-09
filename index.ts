@@ -17,6 +17,7 @@ import markdownItAbbr from 'markdown-it-abbr';
 import markdownItContainer from 'markdown-it-container';
 import webpack, { Configuration as WebPackConfiguration, Stats as WebPackCompileStat } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import yaml, { parse, stringify } from 'yaml'
 
 // markdown parser setup
 const md2Html = new md("default", {
@@ -215,20 +216,34 @@ const readDocument = async (path: string): Promise<Document> => {
     const relativePath: string = path.replace(ROOT_PATH, "");
     const fileName: string = path.split("/").pop();
 
-    // get first line of the content
-    const lines: string[] = fileContent.split("\n");
-    if (lines.length === 0)
-        throw `Syntax error: ${path} Must have at least one line`;
+    let documentTitle = fileName;
 
-    const firstLine: string = lines[0];
-    if (firstLine.length === 0)
-        throw `Syntax error: ${path} First line must not be empty.`;
+    const extension = path.split(".").pop();
+    if (extension === "md") {
 
-    const filteredTitle = firstLine.replace(/#/g, "").trim();
+        // get first line of the content
+        const lines: string[] = fileContent.split("\n");
+        if (lines.length === 0)
+            throw `Syntax error: ${path} Must have at least one line`;
+
+        const firstLine: string = lines[0];
+        if (firstLine.length === 0)
+            throw `Syntax error: ${path} First line must not be empty.`;
+
+        documentTitle = firstLine.replace(/#/g, "").trim();
+
+    } else if (extension === "swagger") {
+
+        const parsedYaml = yaml.parse(fileContent);
+        const title = parsedYaml?.info?.title;
+        documentTitle = title || documentTitle;
+
+    }
+
 
     return {
         path: relativePath,
-        title: filteredTitle,
+        title: documentTitle,
         content: fileContent,
         fileName: fileName,
         type: DocumentType.Document
@@ -249,11 +264,22 @@ const generateMenuHtml = async (currentFolder: Folder, baseDepth: number, curren
 
         if (new RegExp(`\/${INDEXFILE}$`).test(child.path)) continue;
 
-        const absolutePath = md2html(child.path);
         if (child.type === DocumentType.Document) {
 
-            // add relative path prefice ("../") and remove first "/" from original path
-            template += `<li><a href="${relativePathPrefix}${absolutePath.substring(1)}">${child.title}</a></li>`;
+            const document: Document = child as Document;
+
+            if (document.fileName.split(".").pop() === "swagger") {
+
+                const folderName = document.path.replace(/\.swagger$/i, "");
+
+                template += `<li><a href="${relativePathPrefix}${folderName.substring(1)}/index.html">${child.title}</a></li>`;
+
+            } else {
+                const absolutePath = md2html(document.path);
+                // add relative path prefice ("../") and remove first "/" from original path
+                template += `<li><a href="${relativePathPrefix}${absolutePath.substring(1)}">${document.title}</a></li>`;
+            }
+
         } else if (child.type === DocumentType.Folder) {
             const childContent = await generateMenuHtml(child as Folder, baseDepth, currentDepth + 1);
             template += childContent;
@@ -274,7 +300,7 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
     const depth = baseTemplateParams?.depth || 0;
     const relativePathPrefix = depth > 0 ? [...Array(depth)].reduce(res => `../${res}`, "") : "./";
 
-    currentFolder.children.map(async (child: Document | Folder) => {
+    for (const child of currentFolder.children) {
 
         if (child.type === DocumentType.Document) {
 
@@ -312,11 +338,13 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
                 const templateParams = { ...baseTemplateParams, title: currentFolder.title, content: "" };
 
                 let html = templateContent;
-                const menuHTML = `<ul class="top">` + await generateMenuHtml(topFolder, depth, 0) + `</ul>`;
+
+                // swagger file is placed under the folder so I need to add +1 to the depth to get correct relative path
+                const menuHTML = `<ul class="top">` + await generateMenuHtml(topFolder, depth + 1, 0) + `</ul>`;
 
                 templateParams.menu = menuHTML;
 
-                // Becaseu each swagger files are in the folder of it self.
+                // Because each swagger files are in the folder of it self.
                 templateParams.styleSheetPath = `../${relativePathPrefix}${STYLESHEET_NAME}`;
 
                 Object.keys(templateParams).forEach((key: string) => {
@@ -332,7 +360,6 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
 
             }
 
-
         } else if (child.type === DocumentType.Folder) {
             const folder: Folder = child as Folder;
             const distPath = resolve(`${distDir}/${folder.folderName}`);
@@ -346,7 +373,8 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
             await copyFile(origPath, distPath);
         }
 
-    });
+    }
+
 
 }
 
