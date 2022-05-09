@@ -6,11 +6,15 @@ What you do is simply write documents in Markdonw format then run this script.
 This script generates set of html and css so you just deploy to server or to any kind of hosting and that's it.
 
 ## How to use
-- Clone the repo `$ https://github.com/kenyasue/md-documentation.git`
-- Run `$ npm install`
-- Edit markdown files under ./pages folder.
-- Run `$ npm run build`
-- That's it! Html and css files are under ./dist folder.
+```
+$ git clone https://github.com/kenyasue/md-documentation.git
+$ npm install
+$ npm run build
+```
+That's it! Html and css files are under ./dist folder.
+Then please check files under the ./pages folder. They are markdown and swagger files
+used to generate these html.
+
 
 ## File structure
  - /build

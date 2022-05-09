@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/kenyasue/md-documentation#readme",
   "dependencies": {
+    "ascii-text-generator": "^1.0.5",
     "css-loader": "^2.1.0",
     "dotenv": "^16.0.0",
     "highlight.js": "^11.5.1",

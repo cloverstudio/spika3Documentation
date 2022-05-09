@@ -18,6 +18,7 @@ import markdownItContainer from 'markdown-it-container';
 import webpack, { Configuration as WebPackConfiguration, Stats as WebPackCompileStat } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import yaml, { parse, stringify } from 'yaml'
+import asciiTextGenerator from 'ascii-text-generator';
 
 // markdown parser setup
 const md2Html = new md("default", {
@@ -401,7 +402,7 @@ const ui = SwaggerUI({
 });`;
 
                 const indesJsFilePath = `${dist}/index.js`;
-                l(`Start build swaggerUI ${indesJsFilePath}`);
+                l(`Start building swaggerUI ${indesJsFilePath}`);
 
                 await writeFile(indesJsFilePath, swaggerUISrc);
                 await writeFile(`${dist}/swagger.yaml`, doc.content);
@@ -489,8 +490,7 @@ const STYLESHEET_NAME = "style.css";
                 throw "Failed to compile scss";
             }
 
-            l(`Build finished.`);
-
+            l(asciiTextGenerator("All Done", "2"));
         });
 
 
