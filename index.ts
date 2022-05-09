@@ -85,9 +85,11 @@ const webpackConfiguraion: WebPackConfiguration = {
         ]
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            template: './template/index.html'
-        })
+
+        //this part is added in generating process because each page has differenct template html
+        //new HtmlWebpackPlugin({
+        //    template: './template/index.html'
+        //})
     ],
     output: {
         filename: '[name].bundle.js',
@@ -306,9 +308,27 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
 
             } else if (doc.fileName.split(".").pop() === 'swagger') {
 
+                // first gemerate html which is used as webpack template
+                const templateParams = { ...baseTemplateParams, title: currentFolder.title, content: "" };
+
+                let html = templateContent;
+                const menuHTML = `<ul class="top">` + await generateMenuHtml(topFolder, depth, 0) + `</ul>`;
+
+                templateParams.menu = menuHTML;
+
+                // Becaseu each swagger files are in the folder of it self.
+                templateParams.styleSheetPath = `../${relativePathPrefix}${STYLESHEET_NAME}`;
+
+                Object.keys(templateParams).forEach((key: string) => {
+                    const val = templateParams[key];
+                    html = html.replace(new RegExp(`\{\{${key}\}\}`, 'g'), val);
+                });
+
+                await writeFile(distPath, pretty(html), 'utf-8');
+
                 const folderName = distPath.replace(/\.swagger$/i, "");
                 await mkdir(folderName);
-                await buildSwaggerUI(doc, folderName);
+                await buildSwaggerUI(doc, folderName, distPath);
 
             }
 
@@ -333,7 +353,7 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
 const md2html = (str: string): string => str.replace(/^(.+)\.md$/, (m, p1) => `${p1}.html`);
 
 // I use the approach to build weboack programatically into empty folder
-const buildSwaggerUI = (doc: Document, dist: string): Promise<void> => {
+const buildSwaggerUI = (doc: Document, dist: string, templatePath: string): Promise<void> => {
 
     return new Promise((res, rej) => {
 
@@ -343,6 +363,7 @@ const buildSwaggerUI = (doc: Document, dist: string): Promise<void> => {
                 const swaggerUISrc = `
 import SwaggerUI from 'swagger-ui'
 import 'swagger-ui/dist/swagger-ui.css';
+import './swagger.css';
 
 const spec = require('./swagger.yaml');
 
@@ -357,16 +378,31 @@ const ui = SwaggerUI({
                 await writeFile(indesJsFilePath, swaggerUISrc);
                 await writeFile(`${dist}/swagger.yaml`, doc.content);
 
+                await copyFile(`${ROOT_PATH}/../template/swagger.css`, `${dist}/swagger.css`);
+
                 webpackConfiguraion.entry = {
                     app: indesJsFilePath
                 };
 
                 webpackConfiguraion.output.path = dist;
 
-                webpack(webpackConfiguraion, (err: any, stats: WebPackCompileStat) => { // [Stats Object](#stats-object)
+                webpackConfiguraion.plugins = [
+                    new HtmlWebpackPlugin({
+                        template: templatePath
+                    })
+                ];
+
+                webpack(webpackConfiguraion, async (err: any, stats: WebPackCompileStat) => { // [Stats Object](#stats-object)
                     if (err || stats.hasErrors()) {
                         throw "Failed to compile swaggerUI";
                     }
+
+                    //delete template files
+                    await rm(`${dist}/swagger.yaml`);
+                    await rm(`${dist}/swagger.css`);
+                    await rm(templatePath);
+                    await rm(indesJsFilePath);
+
                     l(`Done successfully.`);
                     res();
                 });
