@@ -8,6 +8,7 @@ This script generates set of html and css so you just deploy to server or to any
 ## How to use
 ```
 $ git clone https://github.com/kenyasue/md-documentation.git
+$ cd md-documentation/
 $ npm install
 $ npm run build
 ```
