@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import fs from 'fs';
+import fs, { write } from 'fs';
 import { readdir, readFile, mkdir, writeFile, rm, copyFile } from 'fs/promises'
 import pretty from 'pretty';
 import md from 'markdown-it';
@@ -15,7 +15,11 @@ import markdownItMark from 'markdown-it-mark';
 import markdownItDeflist from 'markdown-it-deflist';
 import markdownItAbbr from 'markdown-it-abbr';
 import markdownItContainer from 'markdown-it-container';
+import webpack, { Configuration as WebPackConfiguration, Stats as WebPackCompileStat } from 'webpack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import yaml, { parse, stringify } from 'yaml'
 
+// markdown parser setup
 const md2Html = new md("default", {
     highlight: (str: string, lang: string) => {
         if (lang && hljs.getLanguage(lang)) {
@@ -46,6 +50,60 @@ md2Html.use(markdownItHtml5Embed, {
 import 'dotenv/config';
 import { chdir } from 'process';
 
+// webpack configuration ( used for generating swagger ui)
+const webpackConfiguraion: WebPackConfiguration = {
+    mode: 'development',
+    entry: {
+
+        // this will changed in generation process
+        app: "",
+    },
+    resolve: {
+        extensions: ['.ts', '.js'],
+    },
+    module: {
+        rules: [
+            {
+                test: /\.yaml$/,
+                use: [
+                    { loader: 'json-loader' },
+                    { loader: 'yaml-loader' }
+                ]
+            },
+            {
+                test: /\.json$/,
+                use: [
+                    { loader: 'json-loader' },
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' },
+                ]
+            }
+        ]
+    },
+    plugins: [
+
+        //this part is added in generating process because each page has differenct template html
+        //new HtmlWebpackPlugin({
+        //    template: './template/index.html'
+        //})
+    ],
+    output: {
+        filename: '[name].bundle.js',
+
+        // this will changed in generating process
+        path: "",
+    }
+};
+
+/*
+
+*/
+
 
 //--------------------------------------------------------------------------
 // Types
@@ -68,14 +126,14 @@ type Folder = {
 type Document = {
     title: string;
     path: string;
-    markdown: string;
+    content: string;
     fileName: string;
     type: DocumentType;
 }
 
 
 const INDEXFILE = "00.index.md";
-const ParsableDocumentExtensions = ["md"];
+const ParsableDocumentExtensions = ["md", "swagger"];
 //--------------------------------------------------------------------------
 // Functions
 //--------------------------------------------------------------------------
@@ -118,7 +176,7 @@ const readFiles = async (path: string): Promise<Folder> => {
                 return {
                     path: relativePath,
                     title: fileName,
-                    markdown: null,
+                    content: null,
                     fileName: fileName,
                     type: DocumentType.ASSET
                 }
@@ -158,21 +216,35 @@ const readDocument = async (path: string): Promise<Document> => {
     const relativePath: string = path.replace(ROOT_PATH, "");
     const fileName: string = path.split("/").pop();
 
-    // get first line of the content
-    const lines: string[] = fileContent.split("\n");
-    if (lines.length === 0)
-        throw `Syntax error: ${path} Must have at least one line`;
+    let documentTitle = fileName;
 
-    const firstLine: string = lines[0];
-    if (firstLine.length === 0)
-        throw `Syntax error: ${path} First line must not be empty.`;
+    const extension = path.split(".").pop();
+    if (extension === "md") {
 
-    const filteredTitle = firstLine.replace(/#/g, "").trim();
+        // get first line of the content
+        const lines: string[] = fileContent.split("\n");
+        if (lines.length === 0)
+            throw `Syntax error: ${path} Must have at least one line`;
+
+        const firstLine: string = lines[0];
+        if (firstLine.length === 0)
+            throw `Syntax error: ${path} First line must not be empty.`;
+
+        documentTitle = firstLine.replace(/#/g, "").trim();
+
+    } else if (extension === "swagger") {
+
+        const parsedYaml = yaml.parse(fileContent);
+        const title = parsedYaml?.info?.title;
+        documentTitle = title || documentTitle;
+
+    }
+
 
     return {
         path: relativePath,
-        title: filteredTitle,
-        markdown: fileContent,
+        title: documentTitle,
+        content: fileContent,
         fileName: fileName,
         type: DocumentType.Document
     }
@@ -192,11 +264,22 @@ const generateMenuHtml = async (currentFolder: Folder, baseDepth: number, curren
 
         if (new RegExp(`\/${INDEXFILE}$`).test(child.path)) continue;
 
-        const absolutePath = md2html(child.path);
         if (child.type === DocumentType.Document) {
 
-            // add relative path prefice ("../") and remove first "/" from original path
-            template += `<li><a href="${relativePathPrefix}${absolutePath.substring(1)}">${child.title}</a></li>`;
+            const document: Document = child as Document;
+
+            if (document.fileName.split(".").pop() === "swagger") {
+
+                const folderName = document.path.replace(/\.swagger$/i, "");
+
+                template += `<li><a href="${relativePathPrefix}${folderName.substring(1)}/index.html">${child.title}</a></li>`;
+
+            } else {
+                const absolutePath = md2html(document.path);
+                // add relative path prefice ("../") and remove first "/" from original path
+                template += `<li><a href="${relativePathPrefix}${absolutePath.substring(1)}">${document.title}</a></li>`;
+            }
+
         } else if (child.type === DocumentType.Folder) {
             const childContent = await generateMenuHtml(child as Folder, baseDepth, currentDepth + 1);
             template += childContent;
@@ -217,29 +300,65 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
     const depth = baseTemplateParams?.depth || 0;
     const relativePathPrefix = depth > 0 ? [...Array(depth)].reduce(res => `../${res}`, "") : "./";
 
-    currentFolder.children.map(async (child: Document | Folder) => {
+    for (const child of currentFolder.children) {
 
         if (child.type === DocumentType.Document) {
 
             const doc: Document = child as Document;
 
-            if (doc.fileName == INDEXFILE) doc.fileName = "index.html";
+            let distPath = resolve(`${distDir}/${doc.fileName}`);
+            let generatedContent = doc.content;
 
-            const distPath = md2html(resolve(`${distDir}/${doc.fileName}`));
-            const templateParams = { ...baseTemplateParams, title: currentFolder.title, content: md2Html.render(doc.markdown) };
-            let html = templateContent;
+            if (doc.fileName.split(".").pop() === 'md') {
 
-            const menuHTML = `<ul class="top">` + await generateMenuHtml(topFolder, depth, 0) + `</ul>`;
+                if (doc.fileName == INDEXFILE) doc.fileName = "index.html";
+                distPath = md2html(resolve(`${distDir}/${doc.fileName}`));
+                generatedContent = md2Html.render(doc.content);
 
-            templateParams.menu = menuHTML;
-            templateParams.styleSheetPath = `${relativePathPrefix}${STYLESHEET_NAME}`;
+                const templateParams = { ...baseTemplateParams, title: currentFolder.title, content: generatedContent };
 
-            Object.keys(templateParams).forEach((key: string) => {
-                const val = templateParams[key];
-                html = html.replace(new RegExp(`\{\{${key}\}\}`, 'g'), val);
-            })
+                let html = templateContent;
+                const menuHTML = `<ul class="top">` + await generateMenuHtml(topFolder, depth, 0) + `</ul>`;
 
-            await writeFile(distPath, pretty(html), 'utf-8');
+                templateParams.menu = menuHTML;
+                templateParams.styleSheetPath = `${relativePathPrefix}${STYLESHEET_NAME}`;
+
+                Object.keys(templateParams).forEach((key: string) => {
+                    const val = templateParams[key];
+                    html = html.replace(new RegExp(`\{\{${key}\}\}`, 'g'), val);
+                })
+
+
+                await writeFile(distPath, pretty(html), 'utf-8');
+
+
+            } else if (doc.fileName.split(".").pop() === 'swagger') {
+
+                // first gemerate html which is used as webpack template
+                const templateParams = { ...baseTemplateParams, title: currentFolder.title, content: "" };
+
+                let html = templateContent;
+
+                // swagger file is placed under the folder so I need to add +1 to the depth to get correct relative path
+                const menuHTML = `<ul class="top">` + await generateMenuHtml(topFolder, depth + 1, 0) + `</ul>`;
+
+                templateParams.menu = menuHTML;
+
+                // Because each swagger files are in the folder of it self.
+                templateParams.styleSheetPath = `../${relativePathPrefix}${STYLESHEET_NAME}`;
+
+                Object.keys(templateParams).forEach((key: string) => {
+                    const val = templateParams[key];
+                    html = html.replace(new RegExp(`\{\{${key}\}\}`, 'g'), val);
+                });
+
+                await writeFile(distPath, pretty(html), 'utf-8');
+
+                const folderName = distPath.replace(/\.swagger$/i, "");
+                await mkdir(folderName);
+                await buildSwaggerUI(doc, folderName, distPath);
+
+            }
 
         } else if (child.type === DocumentType.Folder) {
             const folder: Folder = child as Folder;
@@ -254,11 +373,76 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
             await copyFile(origPath, distPath);
         }
 
-    });
+    }
+
 
 }
 
 const md2html = (str: string): string => str.replace(/^(.+)\.md$/, (m, p1) => `${p1}.html`);
+
+// I use the approach to build weboack programatically into empty folder
+const buildSwaggerUI = (doc: Document, dist: string, templatePath: string): Promise<void> => {
+
+    return new Promise((res, rej) => {
+
+        try {
+            (async () => {
+
+                const swaggerUISrc = `
+import SwaggerUI from 'swagger-ui'
+import 'swagger-ui/dist/swagger-ui.css';
+import './swagger.css';
+
+const spec = require('./swagger.yaml');
+
+const ui = SwaggerUI({
+  spec,
+  dom_id: '.swagger',
+});`;
+
+                const indesJsFilePath = `${dist}/index.js`;
+                l(`Start build swaggerUI ${indesJsFilePath}`);
+
+                await writeFile(indesJsFilePath, swaggerUISrc);
+                await writeFile(`${dist}/swagger.yaml`, doc.content);
+
+                await copyFile(`${ROOT_PATH}/../template/swagger.css`, `${dist}/swagger.css`);
+
+                webpackConfiguraion.entry = {
+                    app: indesJsFilePath
+                };
+
+                webpackConfiguraion.output.path = dist;
+
+                webpackConfiguraion.plugins = [
+                    new HtmlWebpackPlugin({
+                        template: templatePath
+                    })
+                ];
+
+                webpack(webpackConfiguraion, async (err: any, stats: WebPackCompileStat) => { // [Stats Object](#stats-object)
+                    if (err || stats.hasErrors()) {
+                        throw "Failed to compile swaggerUI";
+                    }
+
+                    //delete template files
+                    await rm(`${dist}/swagger.yaml`);
+                    await rm(`${dist}/swagger.css`);
+                    await rm(templatePath);
+                    await rm(indesJsFilePath);
+
+                    l(`Done successfully.`);
+                    res();
+                });
+
+            })();
+
+        } catch (e) {
+            throw e;
+        }
+
+    });
+}
 
 //--------------------------------------------------------------------------
 // main
@@ -305,9 +489,9 @@ const STYLESHEET_NAME = "style.css";
                 throw "Failed to compile scss";
             }
 
-        });
+            l(`Build finished.`);
 
-        l(`Build finished.`);
+        });
 
 
     } catch (e: any) {
