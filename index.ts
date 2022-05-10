@@ -322,7 +322,7 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
                 const menuHTML = `<ul class="top">` + await generateMenuHtml(topFolder, depth, 0) + `</ul>`;
 
                 templateParams.menu = menuHTML;
-                templateParams.styleSheetPath = `${relativePathPrefix}${STYLESHEET_NAME}`;
+                templateParams.path2top = `${relativePathPrefix}`;
 
                 Object.keys(templateParams).forEach((key: string) => {
                     const val = templateParams[key];
@@ -346,7 +346,7 @@ const generateFiles = async (topFolder: Folder, currentFolder: Folder, baseTempl
                 templateParams.menu = menuHTML;
 
                 // Because each swagger files are in the folder of it self.
-                templateParams.styleSheetPath = `../${relativePathPrefix}${STYLESHEET_NAME}`;
+                templateParams.path2top = `../${relativePathPrefix}`;
 
                 Object.keys(templateParams).forEach((key: string) => {
                     const val = templateParams[key];
@@ -478,21 +478,29 @@ const STYLESHEET_NAME = "style.css";
         const templateStyleFilePath = resolve("./template/style.scss");
         if (!fs.existsSync(templateStyleFilePath)) throw `template/style.scss doesn't exist.`
 
-        // build sass
-        sass.render({
-            file: './template/style.scss',
-        }, (err, result) => {
+        await (new Promise<void>((res, rej) => {
+            // build sass
+            sass.render({
+                file: './template/style.scss',
+            }, (err, result) => {
 
-            fs.writeFileSync(`${OUTPUT_PATH}/${STYLESHEET_NAME}`, result.css);
+                if (err) {
+                    le(err);
+                    rej("Failed to compile scss");
+                } else {
+                    fs.writeFileSync(`${OUTPUT_PATH}/${STYLESHEET_NAME}`, result.css);
+                    res();
 
-            if (err) {
-                le(err);
-                throw "Failed to compile scss";
-            }
+                }
 
-            l(asciiTextGenerator("All Done", "2"));
-        });
+            });
 
+        }))
+
+        // copy assets
+        await copyFile('./template/menu.svg', `${OUTPUT_PATH}/menu.svg`)
+
+        l(asciiTextGenerator("All Done", "2"));
 
     } catch (e: any) {
         le(`Stopped with error: ${e}`);
