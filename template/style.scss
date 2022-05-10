@@ -2,6 +2,7 @@
 @import './reset.scss';
 @import './sytaxhighlight.scss';
 
+
 $background-color: #1e1e1e;
 $text-color: #f7f7f7;
 $primary-color: #303f9f;
@@ -12,6 +13,8 @@ $error-color: #c52b2b;
 $help-color: #673ab7;
 $container-padding: 20px;
 $text-padding: 5px;
+
+$breakpoint-mobile: 768px;
 
 body {
   background-color: $background-color;
@@ -34,40 +37,74 @@ mark {
 }
 
 .contaier {
-  display: grid;
-  grid-template-areas: 
-    "header header"
-    "menu content"
-    "footer footer";
-  grid-template-columns: 20vw 80vw;
-  grid-template-rows: auto auto;
-  
+
+  @media (min-width: $breakpoint-mobile) {
+      display: grid;
+      grid-template-areas: 
+        "header content"
+        "menu content"
+        "footer footer";
+      grid-template-columns: 25vw 75vw;
+      grid-template-rows: 10vh auto auto;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+
+  }
+
+  header{
+    grid-area: header;
+    text-align: left;
+    max-height: 10vh;
+
+    @media (max-width: $breakpoint-mobile) {
+      display: grid;
+      grid-template-columns: 68px auto;
+      grid-template-rows: auto auto;
+    }
+
+    h2{
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: $text-padding;
+    }
+
+    h3{
+      
+    }
+
+    img{
+        @media (min-width: $breakpoint-mobile) {
+          display: none;
+        }
+        grid-row: 1 / span 2;
+        cursor: pointer;
+    }
+
+    padding: $container-padding;
+    background: linear-gradient(90deg, $primary-color 0%, lighten($primary-color, 3%) 96%, lighten($primary-color, 5%) 100%);
+
+  }
 
   .sidebar {
+
+    &.open{
+      left: 0vw;
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+        min-height: 100vh;
+        position: absolute;
+        width: 100vw;
+        left: -100vw;
+        transition: all 0.5s ease;
+    }
+
     min-height: 80vh;
     overflow-x: scroll;
     grid-area: menu;
     background: linear-gradient(90deg, $background-color 0%, lighten($background-color, 3%) 96%, lighten($background-color, 5%) 100%);
     
-
-    header{
-      text-align: left;
-
-      h2{
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin-bottom: $text-padding;
-      }
-
-      h3{
-        
-      }
-
-      padding: $container-padding;
-      background: linear-gradient(90deg, $primary-color 0%, lighten($primary-color, 3%) 96%, lighten($primary-color, 5%) 100%);
-
-    }
-
     ul.top{
       padding: $container-padding;
     }
