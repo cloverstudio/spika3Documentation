@@ -33,3 +33,4 @@ http.createServer((req: IncomingMessage, res: ServerResponse) => {
 
     res.end();
 }).listen(port);
+console.log(`Server started on port ${port}`)
