@@ -24,6 +24,10 @@ http.createServer((req: IncomingMessage, res: ServerResponse) => {
             res.writeHead(200, { 'Content-Type': 'text/html' })
             res.end('post received')
         })
+    } else {
+        console.log(req);
+        res.writeHead(200, { 'Content-Type': 'text/html' })
+        res.end('OK.')
     }
 
 
