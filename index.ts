@@ -19,6 +19,7 @@ import webpack, { Configuration as WebPackConfiguration, Stats as WebPackCompile
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import yaml, { parse, stringify } from 'yaml'
 import asciiTextGenerator from 'ascii-text-generator';
+import 'dotenv/config'
 
 // markdown parser setup
 const md2Html = new md("default", {

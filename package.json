@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": " npx tsc -p tsconfig.json && node build/index.js",
-    "webhook:github" : "npx tsc -p tsconfig.json && node build/webhook/github.js"
+    "webhook:github": "npx tsc -p tsconfig.json && node build/webhook/github.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
   "dependencies": {
     "ascii-text-generator": "^1.0.5",
     "css-loader": "^2.1.0",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "highlight.js": "^11.5.1",
     "html-format": "^1.0.1",
     "html-prettify": "^1.0.6",

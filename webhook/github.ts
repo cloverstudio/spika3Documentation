@@ -4,6 +4,7 @@ const repo = "~/your_repo_path_here/";
 import http, { IncomingMessage, ServerResponse } from 'http';
 import crypto from 'crypto';
 import { exec } from 'child_process';
+import 'dotenv/config';
 
 const port = process.env.WEBHOOK_GITHUB_PORT || 8080;
 
