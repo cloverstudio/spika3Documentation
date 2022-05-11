@@ -17,5 +17,5 @@
         "skipLibCheck": true /* Skip type checking all .d.ts files. */,
         "rootDir": "./"
     },
-    "include": ["decs.d.ts","./*.ts"]
+    "include": ["decs.d.ts","./**/*.ts"]
 }
