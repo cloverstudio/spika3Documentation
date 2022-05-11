@@ -20,16 +20,13 @@ http.createServer((req: IncomingMessage, res: ServerResponse) => {
             body += data
         })
         req.on('end', () => {
-            console.log('Body: ' + body)
-            console.log("request headers", req.headers);
 
             const jsonBody = JSON.parse(body);
             let sig = "sha1=" + crypto.createHmac('sha1', SECRET).update(body.toString()).digest('hex');
 
-            console.log(`${req.headers['x-hub-signature']}:${sig}`);
-
             if (req.headers['x-hub-signature'] == sig) {
-                exec('cd ' + repo + ' && git pull');
+                console.log("Signature matched start building...")
+                exec('cd ' + repo + ' && git pull && npm run build');
             }
 
             res.writeHead(200, { 'Content-Type': 'text/html' })
@@ -41,8 +38,6 @@ http.createServer((req: IncomingMessage, res: ServerResponse) => {
         res.end('OK.')
     }
 
-
-    res.end();
 }).listen(port);
 console.log(`Server started on port ${port}`)
 
