@@ -5,7 +5,7 @@ import 'dotenv/config';
 
 const port = process.env.WEBHOOK_GITHUB_PORT || 8080;
 const SECRET = process.env.WEBHOOK_GITHUB_SECRET;
-const repo = process.env.REPOSITOEY_PATH;
+const repo = process.env.REPOSITOEY_DIR;
 
 
 
