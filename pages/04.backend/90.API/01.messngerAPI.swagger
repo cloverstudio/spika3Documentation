@@ -777,7 +777,7 @@ paths:
       tags:
         - "Message"
       summary: "delete message"
-      description: "delete messsage, remove from only the user when target is "user" remove from all recipients when target is "all"
+      description: "delete messsage, remove from only the user when target is user remove from all recipients when target is all
       consumes:
         - "application/json"
       produces:
