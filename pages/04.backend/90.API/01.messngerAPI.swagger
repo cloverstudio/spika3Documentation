@@ -782,6 +782,16 @@ paths:
         - "application/json"
       produces:
         - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          type: number
+        - name: "localId"
+          in: body
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: "successful operation"
