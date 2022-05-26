@@ -777,7 +777,7 @@ paths:
       tags:
         - "Message"
       summary: "delete message"
-      description: "delete messsage"
+      description: "delete messsage, remove from only the user when target is "user" remove from all recipients when target is "all"
       consumes:
         - "application/json"
       produces:
@@ -787,7 +787,7 @@ paths:
           in: path
           required: true
           type: number
-        - name: "localId"
+        - name: "target"
           in: body
           required: true
           schema:
