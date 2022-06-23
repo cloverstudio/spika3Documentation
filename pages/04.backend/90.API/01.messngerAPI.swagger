@@ -19,6 +19,7 @@ tags:
   - name: "Message"
   - name: "Settings"
   - name: "Sync"
+  - name: "Note"
 schemes:
   - "https"
   - "http"
@@ -719,7 +720,7 @@ paths:
       tags:
         - "Message"
       summary: "Update message"
-      description: "Update messsage"
+      description: "Update message with type text"
       consumes:
         - "application/json"
       produces:
@@ -729,29 +730,7 @@ paths:
           in: path
           required: true
           type: number
-        - name: "roomId"
-          in: body
-          required: true
-          schema:
-            type: integer
-        - name: "type"
-          in: body
-          required: true
-          schema:
-            type: string
-        - name: "body"
-          in: body
-          required: true
-          schema:
-            type: object
-            properties:
-              text:
-                type: string
-              fileId:
-                type: number
-              thumbId:
-                type: number
-        - name: "localId"
+        - name: "text"
           in: body
           schema:
             type: string
@@ -777,7 +756,7 @@ paths:
       tags:
         - "Message"
       summary: "delete message"
-      description: "delete messsage, remove from only the user when target is user remove from all recipients when target is all"
+      description: "delete message, remove from only the user when target is 'user', remove from all recipients when target is 'all'"
       consumes:
         - "application/json"
       produces:
@@ -1240,9 +1219,10 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - in: body
-          name: pushToken
-          type: "string"
+        - name: "pushToken"
+          in: body
+          schema:
+            type: "string"
       responses:
         "200":
           description: "successful operation"
@@ -1280,6 +1260,185 @@ paths:
 
         "403":
           description: "invalid access token"
+
+  /messenger/notes/{id}:
+    get:
+      tags:
+        - "Note"
+      summary: "Get note details"
+      description: "Get note details by id"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  note:
+                    type: "object"
+                    $ref: "#/definitions/Note"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+    put:
+      tags:
+        - "Note"
+      summary: "Update note"
+      description: "Update note by id"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+        - name: "title"
+          in: body
+          required: true
+          schema:
+            type: "string"
+        - name: "content"
+          in: body
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  note:
+                    type: "object"
+                    $ref: "#/definitions/Note"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+    delete:
+      tags:
+        - "Note"
+      summary: "Delete note"
+      description: "Delete note by id"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  deleted:
+                    type: "boolean"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+  /messenger/notes/roomId/{roomId}:
+    get:
+      tags:
+        - "Note"
+      summary: "Get notes by roomId"
+      description: "Get notes by roomId"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                properties:
+                  notes:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/Note"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+    post:
+      tags:
+        - "Note"
+      summary: "Create note"
+      description: "Create note"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+        - name: "title"
+          in: body
+          required: true
+          schema:
+            type: "string"
+        - name: "content"
+          in: body
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  note:
+                    type: "object"
+                    $ref: "#/definitions/Note"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+
 securityDefinitions:
   api_key:
     type: "apiKey"
@@ -1413,6 +1572,11 @@ definitions:
       createdAt:
         type: "integer"
         format: "int32"
+      modifiedAt:
+        type: "integer"
+        format: "int32"
+      deleted:
+        type: "boolean"
       localId:
         type: "string"
 
@@ -1431,6 +1595,26 @@ definitions:
       type:
         type: "string"
       reaction:
+        type: "string"
+      modifiedAt:
+        type: "integer"
+        format: "int32"
+      createdAt:
+        type: "integer"
+        format: "int32"
+
+  Note:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      roomId:
+        type: "integer"
+        format: "int32"
+      title:
+        type: "string"
+      content:
         type: "string"
       modifiedAt:
         type: "integer"
