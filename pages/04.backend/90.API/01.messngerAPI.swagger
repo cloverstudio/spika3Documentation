@@ -987,6 +987,38 @@ paths:
                     $ref: "#/definitions/MessageRecord"
         "400":
           description: "invalid param"
+  /messenger/message-records/{id}:
+    delete:
+      tags:
+        - "MessageRecord"
+      summary: "Delete message record"
+      description: "Delete message record"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          type: number
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  messageRecord:
+                    type: "object"
+                    $ref: "#/definitions/MessageRecord"
+        "400":
+          description: "invalid param"
   /messenger/message-records/sync/{lastUpdate}:
     get:
       tags:
