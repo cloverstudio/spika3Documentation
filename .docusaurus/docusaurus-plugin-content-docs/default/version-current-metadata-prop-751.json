@@ -11,131 +11,167 @@
     "tutorialSidebar": [
       {
         "type": "link",
-        "label": "Tutorial Intro",
+        "label": "Setting up for development",
         "href": "/docs/intro",
         "docId": "intro"
       },
       {
+        "type": "link",
+        "label": "Deployment",
+        "href": "/docs/deployment",
+        "docId": "deployment"
+      },
+      {
+        "type": "link",
+        "label": "Webhooks",
+        "href": "/docs/webhooks",
+        "docId": "webhooks"
+      },
+      {
+        "type": "link",
+        "label": "Messaging API",
+        "href": "/docs/messaging-api",
+        "docId": "messaging-api"
+      },
+      {
         "type": "category",
-        "label": "Tutorial - Basics",
+        "label": "Backend",
         "collapsible": true,
         "collapsed": true,
         "items": [
           {
             "type": "link",
             "label": "Create a Page",
-            "href": "/docs/tutorial-basics/create-a-page",
-            "docId": "tutorial-basics/create-a-page"
+            "href": "/docs/backend/create-a-page",
+            "docId": "backend/create-a-page"
           },
           {
             "type": "link",
             "label": "Create a Document",
-            "href": "/docs/tutorial-basics/create-a-document",
-            "docId": "tutorial-basics/create-a-document"
+            "href": "/docs/backend/create-a-document",
+            "docId": "backend/create-a-document"
           },
           {
             "type": "link",
             "label": "Create a Blog Post",
-            "href": "/docs/tutorial-basics/create-a-blog-post",
-            "docId": "tutorial-basics/create-a-blog-post"
+            "href": "/docs/backend/create-a-blog-post",
+            "docId": "backend/create-a-blog-post"
           },
           {
             "type": "link",
             "label": "Markdown Features",
-            "href": "/docs/tutorial-basics/markdown-features",
-            "docId": "tutorial-basics/markdown-features"
+            "href": "/docs/backend/markdown-features",
+            "docId": "backend/markdown-features"
           },
           {
             "type": "link",
             "label": "Deploy your site",
-            "href": "/docs/tutorial-basics/deploy-your-site",
-            "docId": "tutorial-basics/deploy-your-site"
+            "href": "/docs/backend/deploy-your-site",
+            "docId": "backend/deploy-your-site"
           },
           {
             "type": "link",
             "label": "Congratulations!",
-            "href": "/docs/tutorial-basics/congratulations",
-            "docId": "tutorial-basics/congratulations"
+            "href": "/docs/backend/congratulations",
+            "docId": "backend/congratulations"
           }
         ],
-        "href": "/docs/category/tutorial---basics"
+        "href": "/docs/category/backend"
       },
       {
         "type": "category",
-        "label": "Tutorial - Extras",
+        "label": "Frontend",
         "collapsible": true,
         "collapsed": true,
         "items": [
           {
             "type": "link",
             "label": "Manage Docs Versions",
-            "href": "/docs/tutorial-extras/manage-docs-versions",
-            "docId": "tutorial-extras/manage-docs-versions"
+            "href": "/docs/frontend/manage-docs-versions",
+            "docId": "frontend/manage-docs-versions"
           },
           {
             "type": "link",
             "label": "Translate your site",
-            "href": "/docs/tutorial-extras/translate-your-site",
-            "docId": "tutorial-extras/translate-your-site"
+            "href": "/docs/frontend/translate-your-site",
+            "docId": "frontend/translate-your-site"
           }
         ],
-        "href": "/docs/category/tutorial---extras"
+        "href": "/docs/category/frontend"
       }
     ]
   },
   "docs": {
-    "intro": {
-      "id": "intro",
-      "title": "Tutorial Intro",
-      "description": "Let's discover Docusaurus in less than 5 minutes.",
-      "sidebar": "tutorialSidebar"
-    },
-    "tutorial-basics/congratulations": {
-      "id": "tutorial-basics/congratulations",
+    "backend/congratulations": {
+      "id": "backend/congratulations",
       "title": "Congratulations!",
       "description": "You have just learned the basics of Docusaurus and made some changes to the initial template.",
       "sidebar": "tutorialSidebar"
     },
-    "tutorial-basics/create-a-blog-post": {
-      "id": "tutorial-basics/create-a-blog-post",
+    "backend/create-a-blog-post": {
+      "id": "backend/create-a-blog-post",
       "title": "Create a Blog Post",
       "description": "Docusaurus creates a page for each blog post, but also a blog index page, a tag system, an RSS feed...",
       "sidebar": "tutorialSidebar"
     },
-    "tutorial-basics/create-a-document": {
-      "id": "tutorial-basics/create-a-document",
+    "backend/create-a-document": {
+      "id": "backend/create-a-document",
       "title": "Create a Document",
       "description": "Documents are groups of pages connected through:",
       "sidebar": "tutorialSidebar"
     },
-    "tutorial-basics/create-a-page": {
-      "id": "tutorial-basics/create-a-page",
+    "backend/create-a-page": {
+      "id": "backend/create-a-page",
       "title": "Create a Page",
       "description": "Add Markdown or React files to src/pages to create a standalone page:",
       "sidebar": "tutorialSidebar"
     },
-    "tutorial-basics/deploy-your-site": {
-      "id": "tutorial-basics/deploy-your-site",
+    "backend/deploy-your-site": {
+      "id": "backend/deploy-your-site",
       "title": "Deploy your site",
       "description": "Docusaurus is a static-site-generator (also called Jamstack).",
       "sidebar": "tutorialSidebar"
     },
-    "tutorial-basics/markdown-features": {
-      "id": "tutorial-basics/markdown-features",
+    "backend/markdown-features": {
+      "id": "backend/markdown-features",
       "title": "Markdown Features",
       "description": "Docusaurus supports Markdown and a few additional features.",
       "sidebar": "tutorialSidebar"
     },
-    "tutorial-extras/manage-docs-versions": {
-      "id": "tutorial-extras/manage-docs-versions",
+    "deployment": {
+      "id": "deployment",
+      "title": "Deployment",
+      "description": "You can start developing using docker or you can set up manually.",
+      "sidebar": "tutorialSidebar"
+    },
+    "frontend/manage-docs-versions": {
+      "id": "frontend/manage-docs-versions",
       "title": "Manage Docs Versions",
       "description": "Docusaurus can manage multiple versions of your docs.",
       "sidebar": "tutorialSidebar"
     },
-    "tutorial-extras/translate-your-site": {
-      "id": "tutorial-extras/translate-your-site",
+    "frontend/translate-your-site": {
+      "id": "frontend/translate-your-site",
       "title": "Translate your site",
       "description": "Let's translate docs/intro.md to French.",
+      "sidebar": "tutorialSidebar"
+    },
+    "intro": {
+      "id": "intro",
+      "title": "Setting up for development",
+      "description": "You can start developing using docker or you can set up manually.",
+      "sidebar": "tutorialSidebar"
+    },
+    "messaging-api": {
+      "id": "messaging-api",
+      "title": "Messaging API",
+      "description": "You can start developing using docker or you can set up manually.",
+      "sidebar": "tutorialSidebar"
+    },
+    "webhooks": {
+      "id": "webhooks",
+      "title": "Webhooks",
+      "description": "You can start developing using docker or you can set up manually.",
       "sidebar": "tutorialSidebar"
     }
   }

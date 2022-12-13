@@ -1,0 +1,16 @@
+{
+  "title": "Backend",
+  "description": "Backend docs",
+  "slug": "/category/backend",
+  "permalink": "/docs/category/backend",
+  "navigation": {
+    "previous": {
+      "title": "Messaging API",
+      "permalink": "/docs/messaging-api"
+    },
+    "next": {
+      "title": "Create a Page",
+      "permalink": "/docs/backend/create-a-page"
+    }
+  }
+}

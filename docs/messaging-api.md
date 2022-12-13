@@ -1,8 +1,8 @@
 ---
-sidebar_position: 1
+sidebar_position: 4
 ---
 
-# Setting up for development
+# Messaging API
 
 You can start developing using docker or you can set up manually.
 

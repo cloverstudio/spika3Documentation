@@ -1,8 +1,8 @@
 ---
-sidebar_position: 1
+sidebar_position: 3
 ---
 
-# Setting up for development
+# Webhooks
 
 You can start developing using docker or you can set up manually.
 

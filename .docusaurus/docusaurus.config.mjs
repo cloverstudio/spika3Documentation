@@ -44,19 +44,14 @@ export default {
       "title": "Spika3 Docs",
       "logo": {
         "alt": "Spika3 Logo",
-        "src": "img/logo.svg"
+        "src": "img/spika.png"
       },
       "items": [
         {
           "type": "doc",
           "docId": "intro",
           "position": "left",
-          "label": "Tutorial"
-        },
-        {
-          "to": "/blog",
-          "label": "Blog",
-          "position": "left"
+          "label": "Docs"
         },
         {
           "href": "https://github.com/cloverstudio/spika3",

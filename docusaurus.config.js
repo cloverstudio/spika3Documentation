@@ -58,16 +58,16 @@ const config = {
         title: "Spika3 Docs",
         logo: {
           alt: "Spika3 Logo",
-          src: "img/logo.svg",
+          src: "img/spika.png",
         },
         items: [
           {
             type: "doc",
             docId: "intro",
             position: "left",
-            label: "Tutorial",
+            label: "Docs",
           },
-          { to: "/blog", label: "Blog", position: "left" },
+          //  { to: "/blog", label: "Blog", position: "left" },
           {
             href: "https://github.com/cloverstudio/spika3",
             label: "GitHub",
