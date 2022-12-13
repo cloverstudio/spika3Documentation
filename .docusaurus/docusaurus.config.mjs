@@ -4,15 +4,15 @@
  * Modify the docusaurus.config.js file at your site's root instead.
  */
 export default {
-  "title": "My Site",
-  "tagline": "Dinosaurs are cool",
+  "title": "Spika3 Docs",
+  "tagline": "Open source chat solution",
   "url": "https://your-docusaurus-test-site.com",
   "baseUrl": "/",
   "onBrokenLinks": "throw",
   "onBrokenMarkdownLinks": "warn",
   "favicon": "img/favicon.ico",
-  "organizationName": "facebook",
-  "projectName": "docusaurus",
+  "organizationName": "cloverstudio",
+  "projectName": "spika3Documentation",
   "i18n": {
     "defaultLocale": "en",
     "locales": [
@@ -41,9 +41,9 @@ export default {
   ],
   "themeConfig": {
     "navbar": {
-      "title": "My Site",
+      "title": "Spika3 Docs",
       "logo": {
-        "alt": "My Site Logo",
+        "alt": "Spika3 Logo",
         "src": "img/logo.svg"
       },
       "items": [
@@ -59,7 +59,7 @@ export default {
           "position": "left"
         },
         {
-          "href": "https://github.com/facebook/docusaurus",
+          "href": "https://github.com/cloverstudio/spika3",
           "label": "GitHub",
           "position": "right"
         }
@@ -104,12 +104,12 @@ export default {
             },
             {
               "label": "GitHub",
-              "href": "https://github.com/facebook/docusaurus"
+              "href": "https://github.com/cloverstudio/spika3"
             }
           ]
         }
       ],
-      "copyright": "Copyright © 2022 My Project, Inc. Built with Docusaurus."
+      "copyright": "Copyright © 2022 Clover Studio."
     },
     "prism": {
       "theme": {
