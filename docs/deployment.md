@@ -4,100 +4,76 @@ sidebar_position: 2
 
 # Deployment
 
-You can start developing using docker or you can set up manually.
+Setting up for production.
 
-## Using docker
+## Recommended server spec for a small team
 
-There is a sample docker-compose.yml in the repo so reusing the sample is the easiest way to set up the local dev environment. Here you can find the file. This tutorial uses the [sample file](https://github.com/cloverstudio/Spika3/blob/master/docker-compose.yml.sample) (this tutorial is for **Ubuntu 20.04 or 22.04** ).
+Spika is designed to work on multiple servers; for ease of maintenance, we recommend using a single server.
 
-Set up the required software and Node.js
+|           |                                     |
+| --------- | ----------------------------------: |
+| Processor |                    3.3 GHz, 8 cores |
+| Memory    |                               16 GB |
+| Storage   | 2 TB (depends on the user behavior) |
 
-```bash
-$ sudo apt-get install curl build-essential python3 pip
-$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-$ source ~/.bashrc
-$ nvm install v14.0.0
-$ nvm use v14.0.0
+Even for small teams, we strongly recommend a daily backup of the database and user contents.
+
+### Recommendation for internet services
+
+Spika is designed to work as a huge messaging hub that you can use for B2C service as a part of your startup or whatever you need as a center of communication for massive users. Here is the recommended server configuration.
+
+![img alt](/img/server.png)
+
+### Services
+
+Spika uses the following setting in the .env file to on/off which service you want to use for the instance.
+
+```
+USE_MNG_API=1
+USE_MSG_API=1
+USE_SMS=1
+USE_UPLOAD=1
+USE_PUSH=1
+USE_CONFCALL=1
+USE_SSE=1
 ```
 
-Clone the repo and prepare libraries
+|              |                                                  |
+| ------------ | -----------------------------------------------: |
+| USE_MNG_API  |                      API for management frontend |
+| USE_MSG_API  |                                API for messenger |
+| USE_SMS      |                RabbitMQ consumer for sending SMS |
+| USE_PUSH     | RabbitMQ consumer for sending push notifications |
+| USE_CONFCALL |                         API for conference calls |
+| USE_SSE      |                         RabbitMQ for sending SSE |
+
+### .env
+
+After cloning the source, you have to create a .env file to configure the backend. Most of the parameters say what they do by their name, so we are omitting the explanation for each parameter.
+
+### pm2
+
+We use pm2 for process management and logging. You can use the following code to start the Spika server via pm2.
 
 ```bash
-$ git clone https://github.com/cloverstudio/Spika3.git
-$ cd Spika3
-$ npm install
-$ cp .env-sample .env
+pm2 start npm --name "spikadev" -- run "start:server"
 ```
 
-Then you have to install the docker. Please check it out here, and install the docker and docker-compose.
-https://docs.docker.com/engine/install/ubuntu/
+### Logging
 
-Set up the docker-compose.yml and start containers.
+By default, logging the pm2 is not very useful because there is no timestamp. We recommend doing the following two things for the production env.
+
+#### Show the timestamp in the log
 
 ```bash
-mv docker-compose.yml.sample docker-compose.yml
-
-#change if you need..
-nano docker-compose.yml
-
-#update .env to use the docker-compose config
-nano .env
+pm2 restart spikadev --log-date-format "YYYY-MM-DD HH:MM Z"
 ```
 
-Build the frontend and start the server.
+#### Enable log rotation
+
+Please check [pm2-logrotate](https://www.npmjs.com/package/pm2-logrotate) for details. The following settings enable the log rotation every Sunday at midnight.
 
 ```bash
-$ npx prisma db push
-
-# Build web clients
-$ npm run build:management
-$ npm run build:messenger
-
-# Start server
-$ npm run start:server
-```
-
-## Manually
-
-Set up the required software and Node.js
-
-```bash
-$ sudo apt-get install curl build-essential python3 pip
-$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-$ source ~/.bashrc
-$ nvm install v14.0.0
-$ nvm use v14.0.0
-```
-
-Set up MySQL, RabbitMQ, Redis
-
-[Click here](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04) for instructions for installing MySQL in Ubuntu 20.04. <br/>
-[Click here](https://www.rabbitmq.com/install-debian.html) for instructions for installing RabbitMQ in Ubuntu 20.04.
-
-Install the Redis server
-
-```bash
-$ sudo apt install redis-server
-```
-
-Clone the repo and prepare libraries
-
-```bash
-$ git clone https://github.com/cloverstudio/Spika3.git
-$ cd Spika3
-$ npm install
-$ cp .env-sample .env
-```
-
-Build the frontend and start the server.
-
-```bash
-$ npx prisma db push
-
-# Build web clients
-$ npm run build:management
-$ npm run build:messenger
-
-# Start server
-$ npm run start:server
+pm2 install pm2-logrotate
+pm2 set pm2-logrotate:rotateInterval '0 0 0 0 0'
 ```

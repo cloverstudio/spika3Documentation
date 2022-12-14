@@ -78,6 +78,12 @@ Install the Redis server
 
 ```bash
 $ sudo apt install redis-server
+$ sudo apt install redis-server
+$ sudo apt install redis-server
+$ sudo apt install redis-server
+$ sudo apt install redis-server
+$ sudo apt install redis-server
+$ sudo apt install redis-server
 ```
 
 Clone the repo and prepare libraries
