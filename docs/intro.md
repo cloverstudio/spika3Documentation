@@ -1,109 +1,103 @@
 ---
-sidebar_position: 1
+sidebar_position: 0
 ---
 
-# Setting up for development
+# Intro
 
-You can start developing using docker or you can set up manually.
+We designed Spika3 for every average developer to be able to modify it easily. We use only industry-standard libraries and frameworks, and aim for the code to be as simple as possible.
 
-## Using docker
+## System requirements
 
-There is a sample docker-compose.yml in the repo so reusing the sample is the easiest way to set up the local dev environment. Here you can find the file. This tutorial uses the [sample file](https://github.com/cloverstudio/Spika3/blob/master/docker-compose.yml.sample) (this tutorial is for **Ubuntu 20.04 or 22.04** ).
+### Server
 
-Set up the required software and Node.js
+**Minimum hardware requirements**
 
-```bash
-$ sudo apt-get install curl build-essential python3 pip
-$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-$ source ~/.bashrc
-$ nvm install v14.0.0
-$ nvm use v14.0.0
-```
+We use a demo server on AWS’s T2 medium instance for about 50 people in our company.
 
-Clone the repo and prepare libraries
+|           |                                       |
+| --------- | ------------------------------------: |
+| Processor |                      3.3 GHz, 2 cores |
+| Memory    |                                  4 GB |
+| Storage   | 128 GB (depends on the user behavior) |
 
-```bash
-$ git clone https://github.com/cloverstudio/Spika3.git
-$ cd Spika3
-$ npm install
-$ cp .env-sample .env
-```
+The storage capacity is only used for the operating system, to run the Spika server, and for the frontend. You need to adjust the storage based on the way you use it.
 
-Then you have to install the docker. Please check it out here, and install the docker and docker-compose.
-https://docs.docker.com/engine/install/ubuntu/
+### Operating system
 
-Set up the docker-compose.yml and start containers.
+For testing, we use Ubuntu 20.04 and 22.04.
 
-```bash
-mv docker-compose.yml.sample docker-compose.yml
+**Services**
 
-#change if you need..
-nano docker-compose.yml
+|              |     |
+| ------------ | --: |
+| MySQL server | 8.0 |
+| RabbitMQ     | 3.9 |
+| Redis server | 7.0 |
 
-#update .env to use the docker-compose config
-nano .env
-```
+## Frontend
 
-Build the frontend and start the server.
+We support almost all modern browsers. We use the latest version of Chrome for manual testing.
 
-```bash
-$ npx prisma db push
+|         |      |
+| ------- | ---: |
+| Chrome  |  105 |
+| Safari  | 15.6 |
+| Edge    |  104 |
+| Firefox |  104 |
 
-# Build web clients
-$ npm run build:management
-$ npm run build:messenger
+## Android app
 
-# Start server
-$ npm run start:server
-```
+We support all Android versions from API 24 (Nougat) to API 31 (Snow Cone)
 
-## Manually
+| Version    | Codename        | SDK/API level | Version Code |
+| ---------- | --------------- | ------------- | ------------ |
+| Android 7  | Nougat          | 24, 25        | N, N_MR1     |
+| Android 8  | Oreo            | 26, 27        | O, O_MR1     |
+| Android 9  | Pie             | 28            | P            |
+| Android 10 | Quince Tart     | 29            | Q            |
+| Android 11 | Red Velvet Cake | 30            | R            |
+| Android 12 | Snow Cone       | 31            | S            |
 
-Set up the required software and Node.js
+## iOS app
 
-```bash
-$ sudo apt-get install curl build-essential python3 pip
-$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-$ source ~/.bashrc
-$ nvm install v14.0.0
-$ nvm use v14.0.0
-```
+TBD
 
-Set up MySQL, RabbitMQ, Redis
+## Libraries and frameworks
 
-[Click here](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04) for instructions for installing MySQL in Ubuntu 20.04. <br/>
-[Click here](https://www.rabbitmq.com/install-debian.html) for instructions for installing RabbitMQ in Ubuntu 20.04.
+### Backend
 
-Install the Redis server
+|                  |        |
+| ---------------- | -----: |
+| Express.js       | 4.18.0 |
+| Prisma.io        | 3.13.0 |
+| Mediasoup server | 3.9.13 |
 
-```bash
-$ sudo apt install redis-server
-$ sudo apt install redis-server
-$ sudo apt install redis-server
-$ sudo apt install redis-server
-$ sudo apt install redis-server
-$ sudo apt install redis-server
-$ sudo apt install redis-server
-```
+### Frontend
 
-Clone the repo and prepare libraries
+|               |       |
+| ------------- | ----: |
+| React.js      |  17.0 |
+| Redux.js      | 7.1.8 |
+| Redux Toolkit | 1.6.1 |
+| Material UI   | 5.6.4 |
 
-```bash
-$ git clone https://github.com/cloverstudio/Spika3.git
-$ cd Spika3
-$ npm install
-$ cp .env-sample .env
-```
+### Android app
 
-Build the frontend and start the server.
+|                         |         |
+| ----------------------- | ------: |
+| Crashlytics             |  30.0.0 |
+| Retrofit                |   2.9.0 |
+| Android Lifecycle       |   2.4.1 |
+| Kotlin Coroutines       |   1.5.2 |
+| Hilt                    |  2.38.1 |
+| Room Database           |   2.4.2 |
+| Navigational Components |   2.4.2 |
+| Glide                   |  4.11.0 |
+| Timber Log              |   5.0.1 |
+| SMS Verification API    |  20.2.0 |
+| Lib Phone Number        | 8.12.41 |
+| Vanniktech Google Emoji |  0.15.0 |
 
-```bash
-$ npx prisma db push
+### iOS app
 
-# Build web clients
-$ npm run build:management
-$ npm run build:messenger
-
-# Start server
-$ npm run start:server
-```
+TBD
