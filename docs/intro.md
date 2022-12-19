@@ -4,7 +4,7 @@ sidebar_position: 0
 
 # Intro
 
-We designed Spika3 for every average developer to be able to modify it easily. We use only industry-standard libraries and frameworks, and aim for the code to be as simple as possible.
+We designed Spika 3 for every average developer to be able to modify it easily. We use only industry-standard libraries and frameworks, and aim for the code to be as simple as possible.
 
 ## System requirements
 
