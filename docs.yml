@@ -683,32 +683,33 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - name: "roomId"
-                  in: body
-                  required: true
+                - in: "body"
                   schema:
-                      type: integer
-                - name: "type"
-                  in: body
-                  required: true
-                  schema:
-                      type: string
-                - name: "body"
-                  in: body
-                  required: true
-                  schema:
-                      type: object
+                      type: "object"
                       properties:
-                          text:
+                          roomId:
+                              required: true
+                              type: integer
+                          type:
+                              required: true
                               type: string
-                          fileId:
+                              enum: [text, video, audio, file, image]
+                          body:
+                              required: true
+                              type: object
+                              properties:
+                                  text:
+                                      type: string
+                                      description: "Required if type is text"
+                                  fileId:
+                                      type: number
+                                      description: "Required if type is video, audio, image or file"
+                                  thumbId:
+                                      type: number
+                          localId:
+                              type: string
+                          replyId:
                               type: number
-                          thumbId:
-                              type: number
-                - name: "localId"
-                  in: body
-                  schema:
-                      type: string
 
             responses:
                 "200":
@@ -727,12 +728,16 @@ paths:
                                         $ref: "#/definitions/Message"
                 "400":
                     description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "room delete, room is blocked or invalid access token"
     /messenger/messages/{id}:
         put:
             tags:
                 - "Message"
             summary: "Update message"
-            description: "Update messsage"
+            description: "Update message, only available if message type is text"
             consumes:
                 - "application/json"
             produces:
@@ -742,32 +747,13 @@ paths:
                   in: path
                   required: true
                   type: number
-                - name: "roomId"
-                  in: body
-                  required: true
+                - in: "body"
                   schema:
-                      type: integer
-                - name: "type"
-                  in: body
-                  required: true
-                  schema:
-                      type: string
-                - name: "body"
-                  in: body
-                  required: true
-                  schema:
-                      type: object
+                      type: "object"
                       properties:
                           text:
                               type: string
-                          fileId:
-                              type: number
-                          thumbId:
-                              type: number
-                - name: "localId"
-                  in: body
-                  schema:
-                      type: string
+                              required: true
 
             responses:
                 "200":
@@ -786,11 +772,17 @@ paths:
                                         $ref: "#/definitions/Message"
                 "400":
                     description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "user is not message owner, room is blocked or invalid access token"
+                "404":
+                    description: "message not found"
         delete:
             tags:
                 - "Message"
             summary: "delete message"
-            description: "delete messsage"
+            description: "delete message"
             consumes:
                 - "application/json"
             produces:
@@ -800,6 +792,10 @@ paths:
                     description: "successful operation"
                 "400":
                     description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "room delete, room is blocked or invalid access token"
     /messenger/messages/roomId/{roomId}:
         get:
             tags:
@@ -841,7 +837,9 @@ paths:
                                         type: "number"
                 "403":
                     description: "invalid access token"
-    /messenger/messages/{timestamp}:
+                "401":
+                    description: "access token expired"
+    /messenger/messages/sync/{lastUpdate}:
         get:
             tags:
                 - "Message"
@@ -853,7 +851,7 @@ paths:
                 - "application/json"
             parameters:
                 - in: path
-                  name: timestamp
+                  name: lastUpdate
                   type: "number"
                   required: true
             responses:
@@ -868,20 +866,20 @@ paths:
                             data:
                                 type: "object"
                                 properties:
-                                    list:
+                                    messages:
                                         type: "array"
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/Message"
-                                    count:
-                                        type: "number"
-                                    limit:
-                                        type: "number"
-
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
     /messenger/messages/{messageId}/message-records:
         get:
             tags:
-                - "Message"
+                - Message
+                - MessageRecord
             summary: "Get all message records for specific message"
             description: "Get all message records for specific message"
             consumes:
@@ -910,25 +908,33 @@ paths:
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/MessageRecord"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
+                "404":
+                    description: "message not found"
     /messenger/messages/delivered:
         post:
             tags:
                 - "Message"
-            summary: "Notify backend messages are saved in client side."
+            summary: "Flag messages as delivered"
             description: "Notify backend messages are saved in client side."
             consumes:
                 - "application/json"
             produces:
                 - "application/json"
             parameters:
-                - name: "messagesIds"
-                  in: body
-                  required: true
+                - in: "body"
                   schema:
-                      type: array
-                      items:
-                          type: number
-                      minItems: 1
+                      type: "object"
+                      properties:
+                          messagesIds:
+                              required: true
+                              type: array
+                              items:
+                                  type: number
+                                  minItems: 1
             responses:
                 "200":
                     description: "successful operation"
@@ -948,17 +954,25 @@ paths:
                                             $ref: "#/definitions/MessageRecord"
                 "400":
                     description: "invalid param"
-
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
     /messenger/messages/{roomId}/seen:
         post:
             tags:
                 - "Message"
-            summary: "Notify backend when message are shown in the client side first time."
+            summary: "Flag all room messages as seen"
             description: "Notify backend when message are shown in the client side first time."
             consumes:
                 - "application/json"
             produces:
                 - "application/json"
+            parameters:
+                - in: path
+                  name: roomId
+                  type: "number"
+                  required: true
             responses:
                 "200":
                     description: "successful operation"
@@ -978,6 +992,11 @@ paths:
                                             $ref: "#/definitions/MessageRecord"
                 "400":
                     description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
+
     /messenger/message-records:
         post:
             tags:
