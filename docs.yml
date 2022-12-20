@@ -1,15 +1,15 @@
 swagger: "2.0"
 info:
-    description: "This is the api specification for spika ultimate"
+    description: "This is the api specification for Spika 3"
     version: "1.0.0"
-    title: "Spika3 messenger API"
+    title: "Spika 3 messenger API"
     termsOfService: "http://swagger.io/terms/"
     contact:
-        email: "apiteam@swagger.io"
+        email: "info@clover.studio"
     license:
         name: "Apache 2.0"
         url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "spika.ultimate.com"
+host: "clover.spika.chat"
 basePath: "/api/messenger"
 tags:
     - name: "Auth"
@@ -21,29 +21,29 @@ tags:
     - name: "Sync"
 schemes:
     - "https"
-    - "http"
 paths:
     /messenger/auth:
         post:
             tags:
                 - "Auth"
-            summary: "The first step of signup process"
-            description: "The first step of signup process"
+            summary: "The first step of sign-up process"
+            description: "The first step of sign-up process"
             consumes:
                 - "application/json"
             produces:
                 - "application/json"
             parameters:
-                - name: "telephoneNumber"
-                  in: body
-                  required: true
+                - in: "body"
                   schema:
-                      type: string
-                - name: "deviceId"
-                  in: body
-                  required: true
-                  schema:
-                      type: string
+                      type: "object"
+                      properties:
+                          telephoneNumber:
+                              type: "string"
+                              required: true
+                          deviceId:
+                              type: "string"
+                              required: true
+
             responses:
                 "200":
                     description: "successful operation"
@@ -64,8 +64,13 @@ paths:
                                     device:
                                         type: "object"
                                         $ref: "#/definitions/Device"
+                                    browserDeviceId:
+                                        type: "integer"
+                                        format: "int32"
                 "400":
                     description: "invalid param"
+                "403":
+                    description: "There is already phone number tied to this device"
     /messenger/auth/verify:
         post:
             tags:
@@ -77,16 +82,16 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - name: "code"
-                  in: body
-                  required: true
+                - in: "body"
                   schema:
-                      type: string
-                - name: "deviceId"
-                  in: body
-                  required: true
-                  schema:
-                      type: string
+                      type: "object"
+                      properties:
+                          code:
+                              type: "string"
+                              required: true
+                          deviceId:
+                              type: "string"
+                              required: true
             responses:
                 "200":
                     description: "successful operation"
@@ -99,8 +104,6 @@ paths:
                             data:
                                 type: object
                                 properties:
-                                    isNewUser:
-                                        type: "boolean"
                                     user:
                                         type: "object"
                                         $ref: "#/definitions/User"
@@ -109,30 +112,35 @@ paths:
                                         $ref: "#/definitions/Device"
                 "400":
                     description: "Bad request"
-                "422":
-                    description: "invalid pin"
+                "403":
+                    description: "invalid verificationCode"
                 "404":
-                    description: "Device Not found"
+                    description: "Device not found"
+
     /messenger/contacts:
         post:
             tags:
                 - "Contact"
             summary: "Update user contact."
-            description: "Client sents hashed phone number list to the server."
+            description: "Client sends hashed phone number list to the server."
             consumes:
                 - "application/json"
             produces:
                 - "application/json"
             parameters:
-                - name: "contacts"
-                  in: body
-                  required: true
+                - in: "body"
                   schema:
-                      type: array
-                      items:
-                          type: string
-                      minItems: 1
-                      maxItems: 500
+                      type: "object"
+                      properties:
+                          contacts:
+                              description: "Hashed phone numbers list"
+                              required: true
+                              type: array
+                              items:
+                                  type: string
+                                  minItems: 1
+                                  maxItems: 500
+
             responses:
                 "200":
                     description: "Return list of users which is already in the system"
@@ -157,11 +165,13 @@ paths:
                     description: "invalid param"
                 "403":
                     description: "invalid access token"
+                "401":
+                    description: "access token expired"
         get:
             tags:
                 - "Contact"
             summary: "Get contacts"
-            description: "Get contacts"
+            description: "Returns users contacts"
             consumes:
                 - "application/json"
             produces:
@@ -170,48 +180,9 @@ paths:
                 - in: query
                   name: page
                   type: "number"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    list:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/User"
-                                    count:
-                                        type: "number"
-                                    limit:
-                                        type: "number"
-                "400":
-                    description: "invalid param"
-                "403":
-                    description: "invalid access token"
-    /messenger/contacts/all:
-        get:
-            tags:
-                - "Contact"
-            summary: "Get all contacts"
-            description: "Get all contacts for team mode"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
                 - in: query
                   name: keyword
                   type: "string"
-                - in: query
-                  name: page
-                  type: "number"
             responses:
                 "200":
                     description: "successful operation"
@@ -237,6 +208,9 @@ paths:
                     description: "invalid param"
                 "403":
                     description: "invalid access token"
+                "401":
+                    description: "access token expired"
+
     /upload/files:
         post:
             tags:
@@ -248,24 +222,22 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - name: "chunk"
-                  in: body
-                  required: true
+                - in: "body"
                   schema:
-                      type: string
-                  description: "Base64 encoded text of the chunk"
-                - name: "offset"
-                  in: body
-                  required: true
-                  schema:
-                      type: number
-                  description: "The position of the chunk in the entire file"
-                - name: "clientId"
-                  in: body
-                  required: true
-                  schema:
-                      type: string
-                  description: "The random string to identifiy upload."
+                      type: "object"
+                      properties:
+                          chunk:
+                              type: string
+                              required: true
+                              description: "Base64 encoded text of the chunk"
+                          offset:
+                              type: number
+                              required: true
+                              description: "The position of the chunk in the entire file"
+                          clientId:
+                              type: string
+                              required: true
+                              description: "The random string to identify upload."
             responses:
                 "200":
                     description: "Returns list of chunks uploaded"
@@ -286,27 +258,8 @@ paths:
                     description: "invalid param"
                 "403":
                     description: "invalid access token"
-        get:
-            tags:
-                - "File"
-            summary: "Download file"
-            description: "Download file"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: fileId
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "binary file"
-                "400":
-                    description: "invalid param"
-                "403":
-                    description: "invalid access token"
+                "401":
+                    description: "access token expired"
     /upload/files/verify:
         post:
             tags:
@@ -318,53 +271,56 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - name: "total"
-                  in: body
-                  required: true
+                - in: "body"
                   schema:
-                      type: number
-                  description: "Total number of chunks"
-                - name: "size"
-                  in: body
-                  required: true
-                  schema:
-                      type: number
-                  description: "File size in bytes"
-                - name: "mimeType"
-                  in: body
-                  required: true
-                  schema:
-                      type: string
-                  description: "mimeType"
-                - name: "fileName"
-                  in: body
-                  required: true
-                  schema:
-                      type: string
-                  description: "File name"
-                - name: "clientId"
-                  in: body
-                  required: true
-                  schema:
-                      type: string
-                  description: "The random string to identify upload."
-                - name: "fileHash"
-                  in: body
-                  required: true
-                  schema:
-                      type: string
-                  description: "sha256 hash of the file"
-                - name: "type"
-                  in: body
-                  required: true
-                  schema:
-                      type: string
-                  description: "The name of the another model which the file refers ex) avatar, message, group avatar"
-                - name: "relationId"
-                  in: body
-                  schema:
-                      type: number
-                  description: "The id of model the file refers to."
+                      type: "object"
+                      properties:
+                          total:
+                              type: number
+                              required: true
+                              description: "Total number of chunks"
+                          size:
+                              type: number
+                              required: true
+                              description: "File size in bytes"
+                          mimeType:
+                              type: string
+                              required: true
+                              description: "mimeType"
+                          fileName:
+                              type: string
+                              required: true
+                              description: "File name"
+                          clientId:
+                              type: string
+                              required: true
+                              description: "The random string to identify upload."
+                          fileHash:
+                              type: string
+                              required: true
+                              description: "sha256 hash of the file"
+                          type:
+                              type: string
+                              required: true
+                              description: "The name of the another model which the file refers ex) avatar, message, group avatar"
+                          relationId:
+                              type: number
+                              required: true
+                              description: "The id of model the file refers to."
+                          metaData:
+                              description: "File metadata"
+                              schema:
+                                  type: object
+                                  properties:
+                                      duration:
+                                          type: "integer"
+                                          format: "int32"
+                                      height:
+                                          type: "integer"
+                                          format: "int32"
+                                      width:
+                                          type: "integer"
+                                          format: "int32"
 
             responses:
                 "200":
@@ -384,6 +340,35 @@ paths:
                     description: "invalid param"
                 "403":
                     description: "invalid access token"
+                "401":
+                    description: "access token expired"
+                "409":
+                    description: "File with that clientId already exists"
+                "410":
+                    description: "Not all chunks are uploaded"
+                "411":
+                    description: "Hash doesn't match"
+    /upload/files/{id}:
+        get:
+            tags:
+                - "File"
+            summary: "Get file"
+            description: "Get file by id"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - name: "id"
+                  in: path
+                  required: true
+                  description: fileId
+                  type: string
+            responses:
+                "200":
+                    description: "file binary"
+                "404":
+                    description: "file not found"
 
     /messenger/rooms:
         get:
@@ -399,6 +384,9 @@ paths:
                 - in: query
                   name: page
                   type: "number"
+                - in: query
+                  name: keyword
+                  type: "string"
             responses:
                 "200":
                     description: "successful operation"
@@ -422,7 +410,8 @@ paths:
                                         type: "number"
                 "403":
                     description: "invalid access token"
-
+                "401":
+                    description: "access token expired"
         post:
             tags:
                 - "Room"
@@ -433,26 +422,27 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - name: "name"
-                  in: body
+                - in: "body"
                   schema:
-                      type: string
-                - name: "avatarFileId"
-                  in: body
-                  schema:
-                      type: integer
-                - name: "userIds"
-                  in: body
-                  schema:
-                      type: array
-                - name: "adminUserIds"
-                  in: body
-                  schema:
-                      type: array
-                - name: "type"
-                  in: body
-                  schema:
-                      type: string
+                      type: "object"
+                      properties:
+                          name:
+                              type: string
+                              required: true
+                          avatarFileId:
+                              type: integer
+                          userIds:
+                              type: array
+                              required: true
+                              items:
+                                  type: integer
+                          adminUserIds:
+                              type: array
+                              required: true
+                              items:
+                                  type: integer
+                          type:
+                              type: string
 
             responses:
                 "200":
@@ -473,6 +463,10 @@ paths:
                     description: "Already exists"
                 "400":
                     description: "invalid param"
+                "403":
+                    description: "invalid access token"
+                "401":
+                    description: "access token expired"
     /messenger/rooms/users/{userId}:
         get:
             tags:
@@ -483,6 +477,11 @@ paths:
                 - "application/json"
             produces:
                 - "application/json"
+            parameters:
+                - name: "userId"
+                  in: path
+                  required: true
+                  type: number
             responses:
                 "200":
                     description: "successful operation"
@@ -500,6 +499,8 @@ paths:
                                         $ref: "#/definitions/Room"
                 "403":
                     description: "invalid access token"
+                "401":
+                    description: "access token expired"
                 "404":
                     description: "room doesn't exist"
     /messenger/rooms/{id}:
@@ -507,7 +508,7 @@ paths:
             tags:
                 - "Room"
             summary: "Get room detail"
-            description: "Get detail by id"
+            description: "Get room detail by id"
             consumes:
                 - "application/json"
             produces:
@@ -516,8 +517,8 @@ paths:
                 - name: "id"
                   in: path
                   required: true
-                  description: The user id of the user to start conversation
-                  type: string
+                  description: "room id"
+                  type: number
             responses:
                 "200":
                     description: "successful operation"
@@ -526,6 +527,10 @@ paths:
                         $ref: "#/definitions/Room"
                 "403":
                     description: "invalid access token"
+                "404":
+                    description: "room not found"
+                "401":
+                    description: "access token expired"
         put:
             tags:
                 - "Room"
@@ -536,22 +541,27 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - name: "name"
-                  in: body
+                - name: "id"
+                  in: path
+                  required: true
+                  description: "room id"
+                  type: number
+                - in: "body"
                   schema:
-                      type: string
-                - name: "avatarFileId"
-                  in: body
-                  schema:
-                      type: integer
-                - name: "userIds"
-                  in: body
-                  schema:
-                      type: array
-                - name: "adminUserIds"
-                  in: body
-                  schema:
-                      type: array
+                      type: "object"
+                      properties:
+                          name:
+                              type: string
+                          avatarFileId:
+                              type: integer
+                          userIds:
+                              type: array
+                              items:
+                                  type: integer
+                          adminUserIds:
+                              type: array
+                              items:
+                                  type: integer
 
             responses:
                 "200":
@@ -570,6 +580,12 @@ paths:
                                         $ref: "#/definitions/Room"
                 "400":
                     description: "invalid param"
+                "403":
+                    description: "no access token or user is not admin"
+                "401":
+                    description: "access token expired"
+                "404":
+                    description: "room not found"
         delete:
             tags:
                 - "Room"
@@ -601,21 +617,37 @@ paths:
                                         $ref: "#/definitions/Room"
                 "400":
                     description: "invalid param"
-    /messenger/rooms/leave:
+                "403":
+                    description: "no access token or user is not admin"
+                "401":
+                    description: "access token expired"
+                "404":
+                    description: "room not found"
+    /messenger/rooms/{id}/leave:
         post:
             tags:
                 - "Room"
-            summary: "Leave from room"
-            description: "Leave from room"
+            summary: "Leave room"
+            description: "Leave room"
             consumes:
                 - "application/json"
             produces:
                 - "application/json"
             parameters:
-                - name: "adminUserIds"
-                  in: body
+                - name: "id"
+                  in: path
+                  type: number
+                  required: true
+                - in: "body"
                   schema:
-                      type: array
+                      type: "object"
+                      properties:
+                          adminUserIds:
+                              description: "if user is last admin he must spec adminUserIds to create new admins"
+                              type: array
+                              items:
+                                  type: integer
+                                  minItems: 1
             responses:
                 "200":
                     description: "successful operation"
@@ -633,6 +665,12 @@ paths:
                                         $ref: "#/definitions/Room"
                 "400":
                     description: "invalid param"
+                "404":
+                    description: "not found"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
 
     /messenger/messages:
         post:
@@ -1254,6 +1292,7 @@ paths:
 
                 "403":
                     description: "invalid access token"
+
 securityDefinitions:
     api_key:
         type: "apiKey"
@@ -1327,6 +1366,9 @@ definitions:
                 type: "string"
             type:
                 type: "string"
+            metaData:
+                type: "string"
+                description: "JSON value containing duration, width, height"
             relationId:
                 type: "integer"
                 format: "int32"
@@ -1421,4 +1463,3 @@ definitions:
 externalDocs:
     description: "Find out more about Swagger"
     url: "http://swagger.io/terms"
-    test: 112312312312312312312312312312313123121231212312312
