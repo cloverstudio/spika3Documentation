@@ -783,6 +783,11 @@ paths:
                 - "Message"
             summary: "delete message"
             description: "delete message"
+            parameters:
+                - in: path
+                  name: id
+                  type: "number"
+                  required: true
             consumes:
                 - "application/json"
             produces:
@@ -790,8 +795,8 @@ paths:
             responses:
                 "200":
                     description: "successful operation"
-                "400":
-                    description: "invalid param"
+                "404":
+                    description: "not found"
                 "401":
                     description: "access token expired"
                 "403":
@@ -1008,20 +1013,20 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - name: "messageId"
-                  in: body
-                  required: true
+                - in: "body"
                   schema:
-                      type: number
-                - name: "type"
-                  in: body
-                  required: true
-                  schema:
-                      type: string
-                - name: "reaction"
-                  in: body
-                  schema:
-                      type: string
+                      type: "object"
+                      properties:
+                          messageId:
+                              required: true
+                              type: number
+                          type:
+                              required: true
+                              type: string
+                              enum: ["seen", "delivered", "reaction"]
+                          reaction:
+                              type: string
+                              description: "Required if type is reaction"
             responses:
                 "200":
                     description: "successful operation"
@@ -1039,14 +1044,44 @@ paths:
                                         $ref: "#/definitions/MessageRecord"
                 "400":
                     description: "invalid param"
+    /messenger/message-records/{id}:
+        delete:
+            tags:
+                - "MessageRecord"
+            summary: "Delete message record"
+            description: "Delete message record"
+            parameters:
+                - in: path
+                  name: id
+                  type: "number"
+                  required: true
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "successful operation"
+                "404":
+                    description: "not found"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
     /messenger/message-records/sync/{lastUpdate}:
         get:
             tags:
                 - "Sync"
+                - "MessageRecord"
             summary: "Get all message records updated and created since last update"
             description: "Get all message records updated and created since last update"
             produces:
                 - "application/json"
+            parameters:
+                - in: path
+                  name: lastUpdate
+                  type: "number"
+                  required: true
             responses:
                 "200":
                     description: "successful operation"
@@ -1064,6 +1099,10 @@ paths:
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/MessageRecord"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
     /messenger/me:
         get:
             tags:
@@ -1091,6 +1130,10 @@ paths:
                                         $ref: "#/definitions/User"
                 "400":
                     description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
 
         put:
             tags:
@@ -1102,22 +1145,18 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - name: "telephoneNumber"
-                  in: body
+                - in: "body"
                   schema:
-                      type: string
-                - name: "emailAddress"
-                  in: body
-                  schema:
-                      type: string
-                - name: "displayName"
-                  in: body
-                  schema:
-                      type: string
-                - name: "avatarFileId"
-                  in: body
-                  schema:
-                      type: integer
+                      type: "object"
+                      properties:
+                          telephoneNumber:
+                              type: string
+                          emailAddress:
+                              type: string
+                          displayName:
+                              type: string
+                          avatarFileId:
+                              type: integer
             responses:
                 "200":
                     description: "successful operation"
@@ -1135,16 +1174,25 @@ paths:
                                         $ref: "#/definitions/User"
                 "400":
                     description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
     /messenger/users/{id}:
         get:
             tags:
                 - "User"
             summary: "Get use detail"
-            description: "Returns user model"
+            description: "Returns user model by id"
             consumes:
                 - "application/json"
             produces:
                 - "application/json"
+            parameters:
+                - in: path
+                  name: id
+                  type: "number"
+                  required: true
             responses:
                 "200":
                     description: "successful operation"
@@ -1162,6 +1210,12 @@ paths:
                                         $ref: "#/definitions/User"
                 "400":
                     description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
+                "404":
+                    description: "not found"
     /messenger/users/sync/{timestamp}:
         get:
             tags:
@@ -1172,6 +1226,11 @@ paths:
                 - "application/json"
             produces:
                 - "application/json"
+            parameters:
+                - in: path
+                  name: timestamp
+                  type: "number"
+                  required: true
             responses:
                 "200":
                     description: "successful operation"
@@ -1190,6 +1249,11 @@ paths:
                                             $ref: "#/definitions/User"
                 "400":
                     description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
+
     /messenger/history:
         get:
             tags:
@@ -1204,6 +1268,9 @@ paths:
                 - in: query
                   name: page
                   type: "number"
+                - in: query
+                  name: keyword
+                  type: "string"
             responses:
                 "200":
                     description: "successful operation"
@@ -1226,12 +1293,18 @@ paths:
                                                       lastMessage:
                                                           type: "object"
                                                           $ref: "#/definitions/Message"
+                                                      unreadCount:
+                                                          type: "number"
                                     count:
                                         type: "number"
                                     limit:
                                         type: "number"
                 "400":
                     description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
 
     /messenger/device:
         get:
@@ -1260,6 +1333,10 @@ paths:
                                         $ref: "#/definitions/Device"
                 "400":
                     description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
 
         put:
             tags:
@@ -1271,9 +1348,12 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - in: body
-                  name: pushToken
-                  type: "string"
+                - in: "body"
+                  schema:
+                      type: "object"
+                      properties:
+                          pushToken:
+                              type: string
             responses:
                 "200":
                     description: "successful operation"
@@ -1291,6 +1371,10 @@ paths:
                                         $ref: "#/definitions/Device"
                 "400":
                     description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
 
     /messenger/settings:
         get:
@@ -1309,6 +1393,71 @@ paths:
                             teamMode:
                                 type: "boolean"
 
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
+    /messenger/webhooks:
+        get:
+            tags:
+                - "Webhook"
+            summary: "Return server settings to client"
+            description: "Return server settings to client"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            teamMode:
+                                type: "boolean"
+
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
+    /messenger/api-keys:
+        get:
+            tags:
+                - "ApiKey"
+            summary: "Return server settings to client"
+            description: "Return server settings to client"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            teamMode:
+                                type: "boolean"
+
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
+    /messenger/blocks:
+        get:
+            tags:
+                - "Block"
+            summary: "Return server settings to client"
+            description: "Return server settings to client"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            teamMode:
+                                type: "boolean"
+
+                "401":
+                    description: "access token expired"
                 "403":
                     description: "invalid access token"
 
@@ -1343,6 +1492,13 @@ definitions:
             createdAt:
                 type: "integer"
                 format: "int32"
+            modifiedAt:
+                type: "integer"
+                format: "int32"
+            verified:
+                type: "boolean"
+            isBot:
+                type: "boolean"
     Device:
         type: "object"
         properties:
@@ -1391,6 +1547,12 @@ definitions:
             relationId:
                 type: "integer"
                 format: "int32"
+            clientId:
+                type: "integer"
+                format: "int32"
+            createdAt:
+                type: "integer"
+                format: "int32"
     Room:
         type: "object"
         properties:
@@ -1417,9 +1579,14 @@ definitions:
                 format: "int32"
             muted:
                 type: "boolean"
+            deleted:
+                type: "boolean"
             type:
                 type: "string"
             createdAt:
+                type: "integer"
+                format: "int32"
+            modifiedAt:
                 type: "integer"
                 format: "int32"
     Message:
@@ -1450,12 +1617,16 @@ definitions:
             createdAt:
                 type: "integer"
                 format: "int32"
+            modifiedAt:
+                type: "integer"
+                format: "int32"
             localId:
                 type: "string"
             replyId:
                 type: "integer"
                 format: "int32"
-
+            deleted:
+                type: "boolean"
     MessageRecord:
         type: "object"
         properties:
@@ -1468,14 +1639,53 @@ definitions:
             userId:
                 type: "integer"
                 format: "int32"
+            roomId:
+                type: "integer"
+                format: "int32"
             type:
                 type: "string"
             reaction:
                 type: "string"
+            createdAt:
+                type: "integer"
+                format: "int32"
+    Webhook:
+        type: "object"
+        properties:
+            id:
+                type: "integer"
+                format: "int32"
+            roomId:
+                type: "integer"
+                format: "int32"
+            url:
+                type: "string"
+            verifySignature:
+                type: "string"
+            createdAt:
+                type: "integer"
+                format: "int32"
             modifiedAt:
                 type: "integer"
                 format: "int32"
+    ApiKey:
+        type: "object"
+        properties:
+            id:
+                type: "integer"
+                format: "int32"
+            userId:
+                type: "integer"
+                format: "int32"
+            roomId:
+                type: "integer"
+                format: "int32"
+            token:
+                type: "string"
             createdAt:
+                type: "integer"
+                format: "int32"
+            modifiedAt:
                 type: "integer"
                 format: "int32"
 
