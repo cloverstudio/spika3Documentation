@@ -1397,54 +1397,311 @@ paths:
                     description: "access token expired"
                 "403":
                     description: "invalid access token"
-    /messenger/webhooks:
+
+    /messenger/webhooks/roomId/{roomId}:
         get:
             tags:
                 - "Webhook"
-            summary: "Return server settings to client"
-            description: "Return server settings to client"
+            summary: "Get webhooks for specific room"
+            description: "Get webhooks by roomId"
             produces:
                 - "application/json"
+            parameters:
+                - in: path
+                  name: roomId
+                  type: "number"
+                  required: true
             responses:
                 "200":
                     description: "successful operation"
                     schema:
                         type: "object"
                         properties:
-                            teamMode:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    webhooks:
+                                        type: "array"
+                                        items:
+                                            type: "object"
+                                            $ref: "#/definitions/Webhook"
+
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "not room admin or invalid access token"
+        post:
+            tags:
+                - "Webhook"
+            summary: "Create webhook for specific room"
+            description: "Create webhook for specific room"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: roomId
+                  type: "number"
+                  required: true
+                - in: "body"
+                  schema:
+                      type: "object"
+                      properties:
+                          url:
+                              type: string
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    webhook:
+                                        type: "object"
+                                        $ref: "#/definitions/Webhook"
+                "400":
+                    description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "not room admin or invalid access token"
+
+    /messenger/webhooks/{id}:
+        put:
+            tags:
+                - "Webhook"
+            summary: "Update webhook"
+            description: "Update webhook by id"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: id
+                  type: "number"
+                  required: true
+                - in: "body"
+                  schema:
+                      type: "object"
+                      properties:
+                          url:
+                              type: string
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    webhook:
+                                        type: "object"
+                                        $ref: "#/definitions/Webhook"
+                "400":
+                    description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "not room admin or invalid access token"
+                "404":
+                    description: "not found"
+        delete:
+            tags:
+                - "Webhook"
+            summary: "Delete webhook"
+            description: "Delete webhook by id"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: id
+                  type: "number"
+                  required: true
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            deleted:
                                 type: "boolean"
 
                 "401":
                     description: "access token expired"
                 "403":
-                    description: "invalid access token"
-    /messenger/api-keys:
+                    description: "not room admin or invalid access token"
+                "404":
+                    description: "not found"
+
+    /messenger/api-keys/roomId/{roomId}:
         get:
             tags:
                 - "ApiKey"
-            summary: "Return server settings to client"
-            description: "Return server settings to client"
+            summary: "Get api keys for specific room"
+            description: "Get api keys by roomId"
             produces:
                 - "application/json"
+            parameters:
+                - in: path
+                  name: roomId
+                  type: "number"
+                  required: true
             responses:
                 "200":
                     description: "successful operation"
                     schema:
                         type: "object"
                         properties:
-                            teamMode:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    apiKeys:
+                                        type: "array"
+                                        items:
+                                            type: "object"
+                                            $ref: "#/definitions/ApiKey"
+
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "not room admin or invalid access token"
+        post:
+            tags:
+                - "ApiKey"
+            summary: "Create api key for specific room"
+            description: "Create api key for specific room"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: roomId
+                  type: "number"
+                  required: true
+                - in: "body"
+                  schema:
+                      type: "object"
+                      properties:
+                          displayName:
+                              type: string
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    apiKey:
+                                        type: "object"
+                                        $ref: "#/definitions/ApiKey"
+                "400":
+                    description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "not room admin or invalid access token"
+
+    /messenger/api-keys/{id}:
+        put:
+            tags:
+                - "ApiKey"
+            summary: "Update api key"
+            description: "Update api key by id"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: id
+                  type: "number"
+                  required: true
+                - in: "body"
+                  schema:
+                      type: "object"
+                      properties:
+                          displayName:
+                              type: string
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    apiKey:
+                                        type: "object"
+                                        $ref: "#/definitions/ApiKey"
+                "400":
+                    description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "not room admin or invalid access token"
+                "404":
+                    description: "not found"
+        delete:
+            tags:
+                - "ApiKey"
+            summary: "Delete api key"
+            description: "Delete api key by id"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: id
+                  type: "number"
+                  required: true
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            deleted:
                                 type: "boolean"
 
                 "401":
                     description: "access token expired"
                 "403":
-                    description: "invalid access token"
+                    description: "not room admin or invalid access token"
+                "404":
+                    description: "not found"
+
     /messenger/blocks:
         get:
             tags:
                 - "Block"
-            summary: "Return server settings to client"
-            description: "Return server settings to client"
+            summary: "Get blocked list"
+            description: "Get users blocked list"
             produces:
                 - "application/json"
             responses:
@@ -1453,8 +1710,153 @@ paths:
                     schema:
                         type: "object"
                         properties:
-                            teamMode:
-                                type: "boolean"
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    blockedUsers:
+                                        type: "array"
+                                        items:
+                                            type: "integer"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
+
+        post:
+            tags:
+                - "Block"
+            summary: "Create block"
+            description: "Create block"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: roomId
+                  type: "number"
+                  required: true
+                - in: "body"
+                  schema:
+                      type: "object"
+                      properties:
+                          blockedId:
+                              type: number
+                              required: true
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    block:
+                                        type: "object"
+                                        $ref: "#/definitions/Block"
+                "400":
+                    description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
+
+    /messenger/blocks/{id}:
+        delete:
+            tags:
+                - "Block"
+            summary: "Delete block"
+            description: "Delete block by id"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: id
+                  type: "number"
+                  required: true
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    deleted:
+                                        type: "boolean"
+
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
+
+    /messenger/blocks/userId/{userId}:
+        delete:
+            tags:
+                - "Block"
+            summary: "Delete block for specific user"
+            description: "Delete block by userId"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: userId
+                  type: "number"
+                  required: true
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    deleted:
+                                        type: "boolean"
+
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "invalid access token"
+
+    /messenger/blocks/rooms/{roomId}:
+        get:
+            tags:
+                - "Block"
+            summary: "Return block list for specific private room"
+            description: "Return block list for specific private room"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    block:
+                                        type: "object"
+                                        $ref: "#/definitions/Block"
 
                 "401":
                     description: "access token expired"
@@ -1677,6 +2079,12 @@ definitions:
             userId:
                 type: "integer"
                 format: "int32"
+            displayName:
+                type: "string"
+                format: "string"
+            avatarFileId:
+                type: "integer"
+                format: "int32"
             roomId:
                 type: "integer"
                 format: "int32"
@@ -1686,6 +2094,18 @@ definitions:
                 type: "integer"
                 format: "int32"
             modifiedAt:
+                type: "integer"
+                format: "int32"
+    Block:
+        type: "object"
+        properties:
+            id:
+                type: "integer"
+                format: "int32"
+            userId:
+                type: "integer"
+                format: "int32"
+            blockedId:
                 type: "integer"
                 format: "int32"
 
