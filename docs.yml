@@ -1863,6 +1863,199 @@ paths:
                 "403":
                     description: "invalid access token"
 
+    /messenger/notes/roomId/{roomId}:
+        get:
+            tags:
+                - "Note"
+            summary: "Return room notes"
+            description: "Return room notes"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: roomId
+                  type: "number"
+                  required: true
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    notes:
+                                        type: "array"
+                                        items:
+                                            type: "object"
+                                            $ref: "#/definitions/Note"
+
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "not in room or invalid access token"
+        post:
+            tags:
+                - "Note"
+            summary: "Create note"
+            description: "Create note"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: roomId
+                  type: "number"
+                  required: true
+                - in: "body"
+                  schema:
+                      type: "object"
+                      properties:
+                          title:
+                              type: string
+                          content:
+                              type: string
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    note:
+                                        type: "object"
+                                        $ref: "#/definitions/Note"
+                "400":
+                    description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "not in room or invalid access token"
+
+    /messenger/notes/{id}:
+        get:
+            tags:
+                - "Note"
+            summary: "Return note detail"
+            description: "Return note detail"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: id
+                  type: "number"
+                  required: true
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    note:
+                                        type: "object"
+                                        $ref: "#/definitions/Note"
+
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "not in room or invalid access token"
+                "404":
+                    description: "not found"
+        delete:
+            tags:
+                - "Note"
+            summary: "Delete note"
+            description: "Delete note by id"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: id
+                  type: "number"
+                  required: true
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    deleted:
+                                        type: "boolean"
+
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "not in room or invalid access token"
+                "404":
+                    description: "not found"
+        put:
+            tags:
+                - "Note"
+            summary: "Update note"
+            description: "Update note by id"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: id
+                  type: "number"
+                  required: true
+                - in: "body"
+                  schema:
+                      type: "object"
+                      properties:
+                          title:
+                              type: string
+                          content:
+                              type: string
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    note:
+                                        type: "object"
+                                        $ref: "#/definitions/Note"
+                "400":
+                    description: "invalid param"
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "not in room or invalid access token"
+                "404":
+                    description: "not found"
+
 securityDefinitions:
     api_key:
         type: "apiKey"
@@ -2106,6 +2299,25 @@ definitions:
                 type: "integer"
                 format: "int32"
             blockedId:
+                type: "integer"
+                format: "int32"
+    Note:
+        type: "object"
+        properties:
+            id:
+                type: "integer"
+                format: "int32"
+            title:
+                type: "string"
+            content:
+                type: "string"
+            roomId:
+                type: "integer"
+                format: "int32"
+            createdAt:
+                type: "integer"
+                format: "int32"
+            modifiedAt:
                 type: "integer"
                 format: "int32"
 

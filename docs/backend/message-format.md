@@ -59,14 +59,16 @@ If message type is “image”, “video”, “audio” or “file” message s
     "type": "file",
     "body": {
         "fileId": 1184,
-        "thumbId": 1184,
+        "thumbId": 1185,
         "file": {
+            "id": 1184,
             "fileName": "openapi2.json",
             "mimeType": "application/json",
             "path": "/uploads/files/50058285",
             "size": 22388
         },
         "thumb": {
+            "id": 1185,
             "fileName": "openapi2.json",
             "mimeType": "application/json",
             "path": "/uploads/files/50058285",
