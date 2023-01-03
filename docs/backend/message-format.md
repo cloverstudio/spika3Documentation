@@ -18,7 +18,7 @@ sidebar_position: 4
 | modifiedAt     |                              Linux timestamp generated on the server. |
 | localId        | The client side generated unique id to handle message in client side. |
 | deleted        |                                      The flag used to logical delete. |
-| reply          |                                     The flag used to replied message. |
+| replyId        |     If message is reply this field is id of message that we reply to. |
 | messageRecords |            Here comes information about delivered, seen and reaction. |
 
 ## Plain text message
@@ -39,7 +39,7 @@ sidebar_position: 4
     "modifiedAt": 1665390578258,
     "localId": null,
     "deleted": false,
-    "reply": false,
+    "replyId": null,
     "messageRecords": []
 }
 ```
@@ -79,7 +79,7 @@ If message type is “image”, “video”, “audio” or “file” message s
     "modifiedAt": 1665404535428,
     "localId": null,
     "deleted": false,
-    "reply": false,
+    "replyId": null,
     "messageRecords": []
 }
 ```
@@ -105,7 +105,7 @@ Replied message contains the original message body. The original message body is
                 "text": "Can we talk?"
             },
             "type": "text",
-            "reply": false,
+            "replyId": null,
             "roomId": 190,
             "deleted": false,
             "localId": null,

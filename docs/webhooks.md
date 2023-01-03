@@ -32,8 +32,8 @@ Headers
 
 ```json
 {
-  "Content-Type": "application/json",
-  "Verification-Signature": "9JOLCJUVylQxxdhX"
+    "Content-Type": "application/json",
+    "Verification-Signature": "9JOLCJUVylQxxdhX"
 }
 ```
 
@@ -41,37 +41,37 @@ Payload
 
 ```json
 {
-  "data": {
-    "message": {
-      "id": 24006,
-      "fromUserId": 54,
-      "totalUserCount": 3,
-      "deliveredCount": 0,
-      "seenCount": 0,
-      "roomId": 438,
-      "type": "text",
-      "body": {
-        "text": "test"
-      },
-      "createdAt": 1667548137257,
-      "modifiedAt": 1667548137257,
-      "localId": null,
-      "deleted": false,
-      "reply": false
+    "data": {
+        "message": {
+            "id": 24006,
+            "fromUserId": 54,
+            "totalUserCount": 3,
+            "deliveredCount": 0,
+            "seenCount": 0,
+            "roomId": 438,
+            "type": "text",
+            "body": {
+                "text": "test"
+            },
+            "createdAt": 1667548137257,
+            "modifiedAt": 1667548137257,
+            "localId": null,
+            "deleted": false,
+            "replyId": null
+        },
+        "fromUser": {
+            "displayName": "Stjepan",
+            "avatarFileId": 88
+        },
+        "room": {
+            "name": "tstt",
+            "avatarFileId": 88
+        }
     },
-    "fromUser": {
-      "displayName": "Stjepan",
-      "avatarFileId": 88
-    },
-    "room": {
-      "name": "tstt",
-      "avatarFileId": 88
+    "headers": {
+        "Content-Type": "application/json",
+        "Verification-Signature": "9JOLCJUVylQxxdhX"
     }
-  },
-  "headers": {
-    "Content-Type": "application/json",
-    "Verification-Signature": "9JOLCJUVylQxxdhX"
-  }
 }
 ```
 
@@ -83,4 +83,4 @@ Fastes way to create test webhook and see what data is used for calling webhook 
 
 ## Sources
 
-- [0] - [What is a webhook?](https://www.redhat.com/en/topics/automation/what-is-a-webhook)
+-   [0] - [What is a webhook?](https://www.redhat.com/en/topics/automation/what-is-a-webhook)

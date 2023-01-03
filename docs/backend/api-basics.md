@@ -123,7 +123,7 @@ The APIs that are defined like this we use through React Hook. In some cases, it
 ```js
 const response = await dynamicBaseQuery({
     url: "/messenger/messages/",
-    data: { roomId, type, body: { referenceMessage, text: messageText }, reply: true },
+    data: { roomId, type, body: { referenceMessage, text: messageText }, replyId: 558 },
     method: "POST",
 });
 ```
