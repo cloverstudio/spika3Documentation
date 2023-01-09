@@ -698,6 +698,10 @@ paths:
                                 enum: [success, error]
                             data:
                                 type: "object"
+                                properties:
+                                    room:
+                                        type: "object"
+                                        $ref: "#/definitions/Room"
                 "403":
                     description: "invalid access token"
                 "401":
@@ -729,6 +733,10 @@ paths:
                                 enum: [success, error]
                             data:
                                 type: "object"
+                                properties:
+                                    room:
+                                        type: "object"
+                                        $ref: "#/definitions/Room"
                 "403":
                     description: "invalid access token"
                 "401":
