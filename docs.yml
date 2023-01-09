@@ -671,6 +671,68 @@ paths:
                     description: "access token expired"
                 "403":
                     description: "invalid access token"
+    /messenger/rooms/{id}/mute:
+        post:
+            tags:
+                - "Room"
+            summary: "Mute room"
+            description: "Mute room"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - name: "id"
+                  in: path
+                  type: number
+                  required: true
+
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: object
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                "403":
+                    description: "invalid access token"
+                "401":
+                    description: "access token expired"
+    /messenger/rooms/{id}/unmute:
+        post:
+            tags:
+                - "Room"
+            summary: "Unmute room"
+            description: "Unmute room"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - name: "id"
+                  in: path
+                  type: number
+                  required: true
+
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: object
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                "403":
+                    description: "invalid access token"
+                "401":
+                    description: "access token expired"
 
     /messenger/messages:
         post:
