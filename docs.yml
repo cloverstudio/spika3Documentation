@@ -1805,10 +1805,6 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - in: path
-                  name: roomId
-                  type: "number"
-                  required: true
                 - in: "body"
                   schema:
                       type: "object"
