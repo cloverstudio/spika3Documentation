@@ -929,6 +929,11 @@ paths:
                   name: id
                   type: "number"
                   required: true
+                - in: query
+                  name: target
+                  type: "string"
+                  enum: [all, user]
+                  required: true
             consumes:
                 - "application/json"
             produces:
