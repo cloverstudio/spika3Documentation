@@ -2060,6 +2060,8 @@ paths:
                       properties:
                           title:
                               type: string
+                              maxLength: 135
+                              minLength: 1
                           content:
                               type: string
             responses:
@@ -2172,6 +2174,8 @@ paths:
                       properties:
                           title:
                               type: string
+                              maxLength: 135
+                              minLength: 1
                           content:
                               type: string
             responses:
