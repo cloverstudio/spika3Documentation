@@ -866,6 +866,42 @@ paths:
                     description: "invalid access token"
                 "401":
                     description: "access token expired"
+    
+    /messenger/rooms/unread-count:
+        get:
+            tags:
+                - "Room"
+            summary: "Get unread counts"
+            description: "Get unread counts for all rooms. Rooms with no unread messages are not returned"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: object
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: object
+                                properties:
+                                    unreadCounts:
+                                        type: "array"
+                                        items:
+                                            type: "object"
+                                            properties:
+                                                roomId:
+                                                    type: "number"
+                                                unreadCount:
+                                                    type: "number"
+                "403":
+                    description: "invalid access token"
+                "401":
+                    description: "access token expired"
 
     /messenger/messages:
         post:
@@ -1201,7 +1237,36 @@ paths:
                     description: "access token expired"
                 "403":
                     description: "invalid access token"
-
+    /messenger/messages/undelivered:
+        get:
+            tags:
+                - "Message"
+            summary: "Get all undelivered messages for device"
+            description: "Get all undelivered messages for device"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    messages:
+                                        type: "array"
+                                        items:
+                                            type: "object"
+                                            $ref: "#/definitions/Message"
+                "400":
+                    description: "invalid param"
+    
     /messenger/message-records:
         post:
             tags:
@@ -2380,6 +2445,9 @@ definitions:
                 type: "boolean"
             type:
                 type: "string"
+            unreadCount:
+                type: "integer"
+                format: "int32"
             createdAt:
                 type: "integer"
                 format: "int32"
