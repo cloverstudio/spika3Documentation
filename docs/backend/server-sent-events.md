@@ -259,6 +259,17 @@ Spika uses the [Server-sent event](https://developer.mozilla.org/en-US/docs/Web/
 }
 ```
 
+### SEEN_ROOM
+
+This event is sent when user calls seen room api, it is sent to all other users devices so they can update their unread count.
+
+```js
+{
+    type: "SEEN_ROOM",
+    roomId: 55
+}
+```
+
 ## Users
 
 ### USER_UPDATE
