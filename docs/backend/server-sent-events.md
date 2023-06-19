@@ -96,6 +96,9 @@ Spika uses the [Server-sent event](https://developer.mozilla.org/en-US/docs/Web/
       modifiedAt: 123654486948,
       createdAt: 225424343584,
     }
+    deliveredCount: 2,
+    seenCount: 1,
+    totalUserCount: 4,
 }
 ```
 
