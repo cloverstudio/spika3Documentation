@@ -902,6 +902,51 @@ paths:
                     description: "invalid access token"
                 "401":
                     description: "access token expired"
+    /messenger/rooms/sync/{lastUpdate}:
+        get:
+            tags:
+                - "Sync"
+                - "Room"
+            summary: "Get modified rooms after the timestamp"
+            description: ""
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - in: path
+                  name: lastUpdate
+                  type: "number"
+                  required: true
+                - in: query
+                  name: page
+                  type: "number"
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            status:
+                                type: "string"
+                                enum: [success, error]
+                            data:
+                                type: "object"
+                                properties:
+                                    list:
+                                        type: "array"
+                                        items:
+                                            type: "object"
+                                            $ref: "#/definitions/Room"
+                                    limit: 
+                                        type: "integer"
+                                    count: 
+                                        type: "integer"
+                                    hasNext: 
+                                        type: "boolean"
+                "403":
+                    description: "invalid access token"
+    
 
     /messenger/messages:
         post:
@@ -1084,6 +1129,7 @@ paths:
         get:
             tags:
                 - "Message"
+                - "Sync"
             summary: "Get all messages received after the timestamp"
             description: "Get all messages received after the timestamp"
             consumes:
@@ -1095,6 +1141,9 @@ paths:
                   name: lastUpdate
                   type: "number"
                   required: true
+                - in: query
+                  name: page
+                  type: "number"
             responses:
                 "200":
                     description: "successful operation"
@@ -1107,11 +1156,17 @@ paths:
                             data:
                                 type: "object"
                                 properties:
-                                    messages:
+                                    list:
                                         type: "array"
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/Message"
+                                    limit: 
+                                        type: "integer"
+                                    count: 
+                                        type: "integer"
+                                    hasNext: 
+                                        type: "boolean"
                 "401":
                     description: "access token expired"
                 "403":
@@ -1120,6 +1175,7 @@ paths:
         get:
             tags:
                 - "Message"
+                - "Sync"
             summary: "Get all messages modified after the timestamp"
             description: "Get all messages modified after the timestamp"
             consumes:
@@ -1131,6 +1187,9 @@ paths:
                   name: lastUpdate
                   type: "number"
                   required: true
+                - in: query
+                  name: page
+                  type: "number"
             responses:
                 "200":
                     description: "successful operation"
@@ -1143,11 +1202,17 @@ paths:
                             data:
                                 type: "object"
                                 properties:
-                                    messages:
+                                    list:
                                         type: "array"
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/Message"
+                                    limit: 
+                                        type: "integer"
+                                    count: 
+                                        type: "integer"
+                                    hasNext: 
+                                        type: "boolean"
                 "401":
                     description: "access token expired"
                 "403":
@@ -1383,6 +1448,9 @@ paths:
                   name: lastUpdate
                   type: "number"
                   required: true
+                - in: query
+                  name: page
+                  type: "number"
             responses:
                 "200":
                     description: "successful operation"
@@ -1395,11 +1463,17 @@ paths:
                             data:
                                 type: "object"
                                 properties:
-                                    messageRecords:
+                                    list:
                                         type: "array"
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/MessageRecord"
+                                    limit: 
+                                        type: "integer"
+                                    count: 
+                                        type: "integer"
+                                    hasNext: 
+                                        type: "boolean"
                 "401":
                     description: "access token expired"
                 "403":
@@ -1479,11 +1553,33 @@ paths:
                     description: "access token expired"
                 "403":
                     description: "invalid access token"
+        
+        delete:
+            tags:
+                - "User"
+            summary: "Delete authenticated user"
+            description: "Delete authenticated user"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "successful operation"
+                    schema:
+                        type: "object"
+                        properties:
+                            deleted:
+                                type: "boolean"
+
+                "401":
+                    description: "access token expired"
+                "403":
+                    description: "Invalid access token"
+
     /messenger/users/{id}:
         get:
             tags:
                 - "User"
-            summary: "Get use detail"
+            summary: "Get user detail"
             description: "Returns user model by id"
             consumes:
                 - "application/json"
@@ -1521,6 +1617,7 @@ paths:
         get:
             tags:
                 - "User"
+                - "Sync"
             summary: "Get updated users from specified time"
             description: "Returns users models"
             consumes:
@@ -1532,6 +1629,9 @@ paths:
                   name: timestamp
                   type: "number"
                   required: true
+                - in: query
+                  name: page
+                  type: "number"
             responses:
                 "200":
                     description: "successful operation"
@@ -1544,10 +1644,17 @@ paths:
                             data:
                                 type: "object"
                                 properties:
-                                    users:
+                                    list:
                                         type: "array"
                                         items:
+                                            type: "object"
                                             $ref: "#/definitions/User"
+                                    limit: 
+                                        type: "integer"
+                                    count: 
+                                        type: "integer"
+                                    hasNext: 
+                                        type: "boolean"
                 "400":
                     description: "invalid param"
                 "401":
