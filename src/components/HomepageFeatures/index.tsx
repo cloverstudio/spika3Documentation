@@ -10,6 +10,16 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
+    title: 'Multi Platform',
+    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    description: (
+      <>
+        React web app, iOS and Android native apps are available. You can
+        choose one or all of them.
+      </>
+    ),
+  },
+  {
     title: 'Easy to Use',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
@@ -29,16 +39,7 @@ const FeatureList: FeatureItem[] = [
       </>
     ),
   },
-  {
-    title: 'Multi Platform',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
-    description: (
-      <>
-        React web app, iOS and Android native apps are available. You can
-        choose one or all of them.
-      </>
-    ),
-  },
+ 
 ];
 
 function Feature({title, Svg, description}: FeatureItem) {
