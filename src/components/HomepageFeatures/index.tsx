@@ -14,28 +14,28 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Spika3 was designed from the ground up to be easily deployed and
+        used to get your chat app up and running quickly.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Open Source',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Spika3 is open source and free to use. You can use it for your
+        commercial projects.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Multi Platform',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        React web app, iOS and Android native apps are available. You can
+        choose one or all of them.
       </>
     ),
   },

@@ -7,12 +7,12 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: "Spika3 Docs",
-    tagline: "Next generation open source messenger",
+    tagline: "Learn how to use next generation open source messenger",
     url: "https://your-docusaurus-test-site.com",
     baseUrl: "/",
     onBrokenLinks: "warn",
     onBrokenMarkdownLinks: "warn",
-    favicon: "img/favicon.ico",
+    favicon: "favicon.ico",
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
@@ -64,7 +64,7 @@ const config = {
                 // Theme Options for modifying how redoc renders them
                 theme: {
                     // Change with your site colors
-                    //     primaryColor: "#1890ff",
+                    primaryColor: "#4696f0",
                 },
             },
         ],
@@ -77,7 +77,7 @@ const config = {
                 title: "Spika3 Docs",
                 logo: {
                     alt: "Spika3 Logo",
-                    src: "img/spika.png",
+                    src: "img/logo.svg",
                 },
                 items: [
                     {
@@ -102,41 +102,16 @@ const config = {
                         title: "Docs",
                         items: [
                             {
-                                label: "Tutorial",
+                                label: "Getting Started",
                                 to: "/docs/intro",
                             },
-                        ],
-                    },
-                    {
-                        title: "Community",
-                        items: [
                             {
-                                label: "Stack Overflow",
-                                href: "https://stackoverflow.com/questions/tagged/docusaurus",
-                            },
-                            {
-                                label: "Discord",
-                                href: "https://discordapp.com/invite/docusaurus",
-                            },
-                            {
-                                label: "Twitter",
-                                href: "https://twitter.com/docusaurus",
+                                label: "API Reference",
+                                to: "/api",
                             },
                         ],
                     },
-                    {
-                        title: "More",
-                        items: [
-                            {
-                                label: "Blog",
-                                to: "/blog",
-                            },
-                            {
-                                label: "GitHub",
-                                href: "https://github.com/cloverstudio/spika3",
-                            },
-                        ],
-                    },
+                  
                 ],
                 copyright: `Copyright © ${new Date().getFullYear()} Clover Studio.`,
             },
