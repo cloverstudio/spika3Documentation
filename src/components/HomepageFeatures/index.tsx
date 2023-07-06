@@ -10,8 +10,8 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Multi Platform',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Multi-Platform',
+    Svg: require('@site/static/img/Multiplatform.svg').default,
     description: (
       <>
         React web app, iOS and Android native apps are available. You can
@@ -21,7 +21,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    Svg: require('@site/static/img/EasyToUse.svg').default,
     description: (
       <>
         Spika3 was designed from the ground up to be easily deployed and
@@ -31,7 +31,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Open Source',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    Svg: require('@site/static/img/OpenSource.svg').default,
     description: (
       <>
         Spika3 is open source and free to use. You can use it for your
