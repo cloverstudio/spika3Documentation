@@ -4,14 +4,14 @@ import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
+  src: string;
   description: JSX.Element;
 };
 
 const FeatureList: FeatureItem[] = [
   {
     title: 'Multi-Platform',
-    Svg: require('@site/static/img/Multiplatform.svg').default,
+    src: `/img/Multiplatform.svg`,
     description: (
       <>
         React web app, iOS and Android native apps are available. You can
@@ -21,7 +21,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Easy to Use',
-    Svg: require('@site/static/img/EasyToUse.svg').default,
+    src: `/img/EasyToUse.svg`,
     description: (
       <>
         Spika3 was designed from the ground up to be easily deployed and
@@ -31,7 +31,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Open Source',
-    Svg: require('@site/static/img/OpenSource.svg').default,
+    src: `/img/OpenSource.svg`,
     description: (
       <>
         Spika3 is open source and free to use. You can use it for your
@@ -42,11 +42,11 @@ const FeatureList: FeatureItem[] = [
  
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({title, src, description}: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
+        <img className={styles.featureSvg} src={src} alt='Spika 3 Feature' />
       </div>
       <div className="text--center padding-horiz--md">
         <h3>{title}</h3>
