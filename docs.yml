@@ -1351,8 +1351,8 @@ paths:
         post:
             tags:
                 - "MessageRecord"
-            summary: "Add message record"
-            description: "Add message record"
+            summary: "Add reaction message record"
+            description: "Add reaction message record"
             consumes:
                 - "application/json"
             produces:
@@ -1365,10 +1365,6 @@ paths:
                           messageId:
                               required: true
                               type: number
-                          type:
-                              required: true
-                              type: string
-                              enum: ["seen", "delivered", "reaction"]
                           reaction:
                               type: string
                               description: "Required if type is reaction"
@@ -1393,8 +1389,8 @@ paths:
         delete:
             tags:
                 - "MessageRecord"
-            summary: "Delete message record"
-            description: "Delete message record"
+            summary: "Delete reaction message record"
+            description: "Delete reaction message record"
             parameters:
                 - in: path
                   name: id
@@ -1418,8 +1414,8 @@ paths:
             tags:
                 - "Sync"
                 - "MessageRecord"
-            summary: "Get all message records updated and created since last update"
-            description: "Get all message records updated and created since last update"
+            summary: "Get all message records updated since last update"
+            description: "Get all message records updated since last update"
             produces:
                 - "application/json"
             parameters:
@@ -2651,6 +2647,11 @@ definitions:
             createdAt:
                 type: "integer"
                 format: "int32"
+            modifiedAt:
+                type: "integer"
+                format: "int32"
+            isDeleted:
+                type: "boolean"
     Webhook:
         type: "object"
         properties:
