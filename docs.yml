@@ -1327,24 +1327,26 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - in: body
-                  name: roomIds
-                  type: array
-                  items:
-                      type: number
-                      minItems: 1
-                - in: body
-                  name: messageIds
-                  type: array
-                  items:
-                      type: number
-                      minItems: 1
-                - in: body
-                  name: userIds
-                  type: array
-                  items:
-                      type: number
-                      minItems: 1
+                - in: "body"
+                  schema:
+                      type: "object"
+                      properties:
+                          roomIds:
+                              type: array
+                              items:
+                                  type: number
+                                  minItems: 1
+                          messageIds:
+                              required: true
+                              type: array
+                              items:
+                                  type: number
+                                  minItems: 1
+                          userIds:
+                              type: array
+                              items:
+                                  type: number
+                                  minItems: 1
             responses:
                 "200":
                     description: "successful operation"
