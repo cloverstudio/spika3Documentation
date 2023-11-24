@@ -142,8 +142,8 @@ paths:
                                         type: "object"
                                         $ref: "#/definitions/Device"
                 "400":
-                    description: "invalid param" 
-    
+                    description: "invalid param"
+
     /messenger/contacts:
         post:
             tags:
@@ -841,7 +841,7 @@ paths:
                     description: "invalid access token"
                 "401":
                     description: "access token expired"
-    
+
     /messenger/rooms/unread-count:
         get:
             tags:
@@ -914,15 +914,14 @@ paths:
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/Room"
-                                    limit: 
+                                    limit:
                                         type: "integer"
-                                    count: 
+                                    count:
                                         type: "integer"
-                                    hasNext: 
+                                    hasNext:
                                         type: "boolean"
                 "403":
                     description: "invalid access token"
-    
 
     /messenger/messages:
         post:
@@ -1139,11 +1138,11 @@ paths:
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/Message"
-                                    limit: 
+                                    limit:
                                         type: "integer"
-                                    count: 
+                                    count:
                                         type: "integer"
-                                    hasNext: 
+                                    hasNext:
                                         type: "boolean"
                 "401":
                     description: "access token expired"
@@ -1186,11 +1185,11 @@ paths:
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/Message"
-                                    limit: 
+                                    limit:
                                         type: "integer"
-                                    count: 
+                                    count:
                                         type: "integer"
-                                    hasNext: 
+                                    hasNext:
                                         type: "boolean"
                 "401":
                     description: "access token expired"
@@ -1250,7 +1249,7 @@ paths:
                   schema:
                       type: "object"
                       properties:
-                          messagesIds:
+                          messageIds:
                               required: true
                               type: array
                               items:
@@ -1317,16 +1316,35 @@ paths:
                     description: "access token expired"
                 "403":
                     description: "invalid access token"
-    /messenger/messages/undelivered:
-        get:
+    /messenger/messages/forward:
+        post:
             tags:
                 - "Message"
-            summary: "Get all undelivered messages for device"
-            description: "Get all undelivered messages for device"
+            summary: "Forward messages"
+            description: "Forward messages"
             consumes:
                 - "application/json"
             produces:
                 - "application/json"
+            parameters:
+                - in: body
+                  name: roomIds
+                  type: array
+                  items:
+                      type: number
+                      minItems: 1
+                - in: body
+                  name: messageIds
+                  type: array
+                  items:
+                      type: number
+                      minItems: 1
+                - in: body
+                  name: userIds
+                  type: array
+                  items:
+                      type: number
+                      minItems: 1
             responses:
                 "200":
                     description: "successful operation"
@@ -1344,9 +1362,14 @@ paths:
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/Message"
+                                    newRooms:
+                                        type: "array"
+                                        items:
+                                            type: "object"
+                                            $ref: "#/definitions/Room"
                 "400":
                     description: "invalid param"
-    
+
     /messenger/message-records:
         post:
             tags:
@@ -1444,11 +1467,11 @@ paths:
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/MessageRecord"
-                                    limit: 
+                                    limit:
                                         type: "integer"
-                                    count: 
+                                    count:
                                         type: "integer"
-                                    hasNext: 
+                                    hasNext:
                                         type: "boolean"
                 "401":
                     description: "access token expired"
@@ -1529,7 +1552,7 @@ paths:
                     description: "access token expired"
                 "403":
                     description: "invalid access token"
-        
+
         delete:
             tags:
                 - "User"
@@ -1626,11 +1649,11 @@ paths:
                                         items:
                                             type: "object"
                                             $ref: "#/definitions/User"
-                                    limit: 
+                                    limit:
                                         type: "integer"
-                                    count: 
+                                    count:
                                         type: "integer"
-                                    hasNext: 
+                                    hasNext:
                                         type: "boolean"
                 "400":
                     description: "invalid param"
@@ -1784,7 +1807,6 @@ paths:
                                 properties:
                                     teamMode:
                                         type: "boolean"
-                            
 
                 "401":
                     description: "access token expired"
@@ -2624,6 +2646,8 @@ definitions:
                 type: "integer"
                 format: "int32"
             deleted:
+                type: "boolean"
+            isForwarded:
                 type: "boolean"
     MessageRecord:
         type: "object"
