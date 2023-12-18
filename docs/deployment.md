@@ -36,16 +36,21 @@ USE_UPLOAD=1
 USE_PUSH=1
 USE_CONFCALL=1
 USE_SSE=1
+USE_MESSAGE_RECORDS_SSE=1
+USE_WEBHOOK=1
 ```
 
-|              |                                                  |
-| ------------ | -----------------------------------------------: |
-| USE_MNG_API  |                      API for management frontend |
-| USE_MSG_API  |                                API for messenger |
-| USE_SMS      |                RabbitMQ consumer for sending SMS |
-| USE_PUSH     | RabbitMQ consumer for sending push notifications |
-| USE_CONFCALL |                         API for conference calls |
-| USE_SSE      |                         RabbitMQ for sending SSE |
+|                         |                                                  |
+| ----------------------- | -----------------------------------------------: |
+| USE_MNG_API             |                      API for management frontend |
+| USE_MSG_API             |                                API for messenger |
+| USE_SMS                 |                RabbitMQ consumer for sending SMS |
+| USE_PUSH                | RabbitMQ consumer for sending push notifications |
+| USE_CONFCALL            |                         API for conference calls |
+| USE_SSE                 |                         RabbitMQ for sending SSE |
+| USE_UPLOAD              |                                     Upload files |
+| USE_MESSAGE_RECORDS_SSE |     RabbitMQ for sending SSE for message records |
+| USE_WEBHOOK             |                                  Webhook support |
 
 ### .env
 

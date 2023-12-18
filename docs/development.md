@@ -8,7 +8,7 @@ You can start developing using docker or you can set up manually.
 
 ## Using docker
 
-There is a sample docker-compose.yml in the repo so reusing the sample is the easiest way to set up the local dev environment. Here you can find the file. This tutorial uses the [sample file](https://github.com/cloverstudio/Spika3/blob/master/docker-compose.yml.sample) (this tutorial is for **Ubuntu 20.04 or 22.04** ).
+There is a sample docker-compose.yml in the repo so reusing the sample is the easiest way to set up the local dev environment. Here you can find the file. This tutorial uses the [sample file](https://github.com/cloverstudio/Spika3/blob/master/docker-compose.yml.sample) (this tutorial is for **Ubuntu 22.04** ).
 
 Set up the required software and Node.js
 
@@ -16,8 +16,8 @@ Set up the required software and Node.js
 $ sudo apt-get install curl build-essential python3 pip
 $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 $ source ~/.bashrc
-$ nvm install v14.0.0
-$ nvm use v14.0.0
+$ nvm install v20.7.0
+$ nvm use v20.7.0
 ```
 
 Clone the repo and prepare libraries
@@ -47,7 +47,7 @@ nano .env
 Build the frontend and start the server.
 
 ```bash
-$ npx prisma db push
+$ npx prisma db migrate dev
 
 # Build web clients
 $ npm run build:management
@@ -65,8 +65,8 @@ Set up the required software and Node.js
 $ sudo apt-get install curl build-essential python3 pip
 $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 $ source ~/.bashrc
-$ nvm install v14.0.0
-$ nvm use v14.0.0
+$ nvm install v20.7.0
+$ nvm use v20.7.0
 ```
 
 Set up MySQL, RabbitMQ, Redis
@@ -77,12 +77,6 @@ Set up MySQL, RabbitMQ, Redis
 Install the Redis server
 
 ```bash
-$ sudo apt install redis-server
-$ sudo apt install redis-server
-$ sudo apt install redis-server
-$ sudo apt install redis-server
-$ sudo apt install redis-server
-$ sudo apt install redis-server
 $ sudo apt install redis-server
 ```
 
@@ -98,7 +92,7 @@ $ cp .env-sample .env
 Build the frontend and start the server.
 
 ```bash
-$ npx prisma db push
+$ npx prisma db migrate dev
 
 # Build web clients
 $ npm run build:management
@@ -106,4 +100,22 @@ $ npm run build:messenger
 
 # Start server
 $ npm run start:server
+```
+
+## Developing backend
+
+```bash
+$ npm run dev:server
+```
+
+## Developing frontend
+
+```bash
+$ npm run dev:messenger
+```
+
+## Developing management
+
+```bash
+$ npm run dev:management
 ```

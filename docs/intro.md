@@ -68,18 +68,17 @@ TBD
 
 |                  |        |
 | ---------------- | -----: |
-| Express.js       | 4.18.0 |
-| Prisma.io        | 3.13.0 |
+| Express.js       | 4.18.2 |
+| Prisma.io        |  5.3.1 |
 | Mediasoup server | 3.9.13 |
 
 ### Frontend
 
-|               |       |
-| ------------- | ----: |
-| React.js      |  17.0 |
-| Redux.js      | 7.1.8 |
-| Redux Toolkit | 1.6.1 |
-| Material UI   | 5.6.4 |
+|               |         |
+| ------------- | ------: |
+| React.js      |  18.2.0 |
+| Redux Toolkit |   1.9.6 |
+| Material UI   | 5.14.10 |
 
 ### Android app
 
