@@ -47,7 +47,7 @@ nano .env
 Build the frontend and start the server.
 
 ```bash
-$ npx prisma db migrate dev
+$ npx prisma migrate dev
 
 # Build web clients
 $ npm run build:management
@@ -92,7 +92,7 @@ $ cp .env-sample .env
 Build the frontend and start the server.
 
 ```bash
-$ npx prisma db migrate dev
+$ npx prisma migrate dev
 
 # Build web clients
 $ npm run build:management
