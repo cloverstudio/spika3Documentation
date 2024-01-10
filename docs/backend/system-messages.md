@@ -48,8 +48,10 @@ They all share this body format (other message fields are not displayed for simp
     body: {
         text: "User left group",
         subject: "Stjepan",
+        subjectId: User ID
         object: "Clover Studio",
-        type: "user_left_group"
+        type: "user_left_group",
+        objectIds: [ Room ID ]
     }
 }
 ```
@@ -64,8 +66,10 @@ When user updates name AND avatar of the group, this message is sent.
     body: {
         text: "Group updated",
         subject: "John Doe",
+        subjectId: User ID,
         object: "Group name",
-        type: "updated_group"
+        type: "updated_group",
+        objectIds: [ Room ID ]
     }
 }
 ```
@@ -78,7 +82,9 @@ When user updates name AND avatar of the group, this message is sent.
     body: {
         text: "Group name updated",
         subject: "John Doe",
+        subjectId: User ID,
         object: "Group name",
+        objectIds: [ Room ID ]
         type: "updated_group_name"
     }
 }
@@ -92,7 +98,9 @@ When user updates name AND avatar of the group, this message is sent.
     body: {
         text: "Group avatar updated",
         subject: "John Doe",
+        subjectId: User ID,
         object: "Group name",
+        objectIds: [ Room ID ]
         type: "updated_group_avatar"
     }
 }
@@ -108,7 +116,9 @@ When user adds AND removes admins from the group in **one api call**, this messa
     body: {
         text: "Group admins updated",
         subject: "John Doe",
+        subjectId: User ID,
         object: ["John Doe", "Jane Doe"],
+        objectIds: [ User IDs],
         type: "updated_group_admins"
     }
 }
@@ -124,7 +134,9 @@ When user adds AND removes members from the group in **one api call**, this mess
     body: {
         text: "Group members updated",
         subject: "John Doe",
+        subjectId: User ID,
         object: ["John Doe", "Jane Doe"],
+        objectIds: [ User IDs],
         type: "updated_group_members"
     }
 }
@@ -138,7 +150,9 @@ When user adds AND removes members from the group in **one api call**, this mess
     body: {
         text: "Group members added",
         subject: "John Doe",
+        subjectId: User ID,
         object: ["John Doe", "Jane Doe"],
+        objectIds: [ User IDs],
         type: "added_group_members"
     }
 }
@@ -152,7 +166,9 @@ When user adds AND removes members from the group in **one api call**, this mess
     body: {
         text: "Group members removed",
         subject: "John Doe",
+        subjectId: User ID,
         object: ["John Doe", "Jane Doe"],
+        objectIds: [ User IDs],
         type: "removed_group_members"
     }
 }
@@ -166,7 +182,9 @@ When user adds AND removes members from the group in **one api call**, this mess
     body: {
         text: "Group admins added",
         subject: "John Doe",
+        subjectId: User ID,
         object: ["John Doe", "Jane Doe"],
+        objectIds: [ User IDs],
         type: "added_group_admins"
     }
 }
@@ -180,7 +198,9 @@ When user adds AND removes members from the group in **one api call**, this mess
     body: {
         text: "Group admins removed",
         subject: "John Doe",
+        subjectId: User ID,
         object: ["John Doe", "Jane Doe"],
+        objectIds: [ User IDs],
         type: "removed_group_admins"
     }
 }
@@ -194,8 +214,10 @@ When user adds AND removes members from the group in **one api call**, this mess
     body: {
         text: "Note created",
         subject: "John Doe",
+        subjectId: User ID,
         object: "Note title",
-        type: "created_note"
+        type: "created_note",
+        objectIds: [ User IDs],
     }
 }
 ```
@@ -208,6 +230,7 @@ When user adds AND removes members from the group in **one api call**, this mess
     body: {
         text: "Note updated",
         subject: "John Doe",
+        subjectId: User ID,
         object: "Note title",
         type: "updated_note"
     }
@@ -222,6 +245,7 @@ When user adds AND removes members from the group in **one api call**, this mess
     body: {
         text: "Note deleted",
         subject: "John Doe",
+        subjectId: User ID,
         object: "Note title",
         type: "deleted_note"
     }
