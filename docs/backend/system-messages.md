@@ -14,8 +14,10 @@ They all share this body format (other message fields are not displayed for simp
     body: {
         text: "Suggested text for the system message",
         subject: "Who did the action",
+        subjectId: User ID of the performed user
         object: "Object of the action" // also can be an array of strings,
-        type: "subtype of the system message"
+        type: "subtype of the system message",
+        objectIds: [ ID of object the action was performed ]
     }
 }
 ```
@@ -30,8 +32,10 @@ They all share this body format (other message fields are not displayed for simp
     body: {
         text: "Group created",
         subject: "John Doe",
+        subjectId: User ID
         object: "Group name",
         type: "created_group"
+        objectIds: [ Room ID ]
     }
 }
 ```
