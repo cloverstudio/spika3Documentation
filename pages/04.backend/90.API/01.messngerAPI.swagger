@@ -537,6 +537,12 @@ paths:
       produces:
         - "application/json"
       parameters:
+        - name: "action"
+          in: body
+          enum: [ "addGroupUsers", "removeGroupUsers", "addGroupAdmins", "removeGroupAdmins", "changeGroupName", "changeGroupAvatar""],
+          required: true
+          schema:
+            type: string
         - name: "name"
           in: body
           schema:
