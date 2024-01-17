@@ -56,24 +56,6 @@ They all share this body format (other message fields are not displayed for simp
 }
 ```
 
-### UPDATED GROUP
-
-When user updates name AND avatar of the group, this message is sent.
-
-```js
-{
-    type: "system",
-    body: {
-        text: "Group updated",
-        subject: "John Doe",
-        subjectId: User ID,
-        object: "Group name",
-        type: "updated_group",
-        objectIds: [ Room ID ]
-    }
-}
-```
-
 ### UPDATED GROUP NAME
 
 ```js
@@ -104,43 +86,6 @@ When user updates name AND avatar of the group, this message is sent.
         type: "updated_group_avatar"
     }
 }
-```
-
-### UPDATED GROUP ADMINS
-
-When user adds AND removes admins from the group in **one api call**, this message is sent.
-
-```js
-{
-    type: "system",
-    body: {
-        text: "Group admins updated",
-        subject: "John Doe",
-        subjectId: User ID,
-        object: ["John Doe", "Jane Doe"],
-        objectIds: [ User IDs],
-        type: "updated_group_admins"
-    }
-}
-```
-
-### UPDATED GROUP MEMBERS
-
-When user adds AND removes members from the group in **one api call**, this message is sent.
-
-```js
-{
-    type: "system",
-    body: {
-        text: "Group members updated",
-        subject: "John Doe",
-        subjectId: User ID,
-        object: ["John Doe", "Jane Doe"],
-        objectIds: [ User IDs],
-        type: "updated_group_members"
-    }
-}
-```
 
 ### ADDED GROUP MEMBERS
 
