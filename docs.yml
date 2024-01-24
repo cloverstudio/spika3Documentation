@@ -591,10 +591,6 @@ paths:
                               type: array
                               items:
                                   type: integer
-                          adminUserIds:
-                              type: array
-                              items:
-                                  type: integer
 
             responses:
                 "200":
