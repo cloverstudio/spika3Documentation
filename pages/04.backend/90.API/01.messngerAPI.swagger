@@ -539,7 +539,7 @@ paths:
       parameters:
         - name: "action"
           in: body
-          enum: [ "addGroupUsers", "removeGroupUsers", "addGroupAdmins", "removeGroupAdmins", "changeGroupName", "changeGroupAvatar""],
+          enum: [ "addGroupUsers", "removeGroupUsers", "addGroupAdmins", "removeGroupAdmins", "changeGroupName", "changeGroupAvatar"]
           required: true
           schema:
             type: string
@@ -1476,6 +1476,386 @@ paths:
           description: "invalid param"
         "403":
           description: "invalid access token"
+  /messenger/messages/share:
+    post:
+      tags:
+        - "Message"
+      summary: "Share message"
+      description: "Share message on mobile"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "roomIds"
+          in: body
+          required: true
+          schema:
+            type: "array"
+            items:
+              type: "number"
+        - name: "userIds"
+          in: body
+          required: true
+          schema:
+            type: "array"
+            items:
+              type: "number"
+        - name: "messages"
+          in: body
+          required: true
+          schema:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                body: 
+                  type: "object"
+                type: 
+                  type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              messages:
+                 type: "array"
+                 items: 
+                   $ref: "#/definitions/Message"
+              newRooms:
+                type: "array"
+                items: 
+                  $ref: "#/definitions/Room"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+        "500":
+          description: "Server error"
+  /messenger/gallery:
+    get:
+      tags:
+        - "Media"
+      summary: "Get media"
+      description: "Get all images and videos of room"
+      parameters:
+        - in: query
+          name: roomId
+          type: "number"
+          required: true
+        - in: query
+          name: cursor
+          type: "number"
+          required: true
+        - in: query
+          name: take
+          type: "number"
+          required: false
+        - in: query
+          name: fetchNewer
+          type: "boolean"
+          required: false
+        - in: query
+          name: fetchOlder
+          type: "boolean"
+          required: false
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              list:
+                type: "object"
+                properties:
+                  messageId:
+                    type: "integer"
+                    format: "integer"
+                  type:
+                    type: "string"
+                    format: "string"
+                  body:
+                    type: "object"
+                  userId: 
+                    type: "integer"
+                    format: "string"
+                  username: 
+                    type: "string"
+                    format: "string"
+                  date:
+                    type: "string"
+                    format: "date"
+              hasMoreOlderImages:
+                  type: "string"
+                  format: "string"
+              hasMoreNewerImages:
+                  type: "string"
+                  format: "string"    
+        "400":
+          description: "invalid param"
+        "500":
+          description: "server error"
+  /messenger/group-message-rooms:
+    get:
+      tags:
+        - "Room"
+      summary: "Get group message rooms"
+      description: "Get group message rooms"
+      parameters:
+        - in: query
+          name: keyword
+          type: "string"
+          required: true
+        - in: query
+          name: cursor
+          type: "number"
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              groupMessageRoomList:
+                  type: "array"
+                  items: 
+                    $ref: "#/definitions/Room"
+              count:
+                  type: "number"
+                  format: "number"
+              limit:
+                  type: "number"
+                  format: "number"   
+              nextCursor:
+                  type: "number"
+                  format: "number"
+        "500":
+          description: "server error"
+  /messenger/recent-chats:
+    get:
+      tags:
+        - "Room"
+      summary: "Get recent chats"
+      description: "Get recent chats"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              recentUserChats:
+                 type: "array"
+                 items: 
+                   $ref: "#/definitions/Room"
+              recentGroupChats:
+                 type: "array"
+                 items: 
+                   $ref: "#/definitions/Room"
+        "500":
+          description: "server error"
+  /messenger/messages/get-thumbnail:
+    get:
+      tags:
+        - "Link Thumbnail"
+      summary: "Get thumbnail for link"
+      description: "Get thumbnail for link"
+      parameters:
+        - in: query
+          name: url
+          type: "string"
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              thumbnailData:
+                properties:
+                  title:
+                    type: "string"
+                  description:
+                    type: "string"
+                  image:
+                    type: "string"
+                  icon:
+                    type: "string"
+                  url:
+                    type: "string"
+        "404":
+          description: "No thumbnail found"
+        "500":
+          description: "server error"
+  /messenger/messages/roomId/{roomId}/oldest-message-date:
+    get:
+      tags:
+        - "Message"
+      summary: "Get oldest room message date"
+      description: "Get oldest room message date"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              messageDate:
+                 type: "string"
+                 format: "date"
+        "404":
+          description: "No room found"
+        "500":
+          description: "server error"
+  /messenger/messages/roomId/{roomId}/target-message-batch:
+    get:
+      tags:
+        - "Message"
+      summary: "Get message batch by target message"
+      description: "Get message batch by target message"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+        - in: query
+          name: targetMessageId
+          type: "number"
+          required: true
+        - in: query
+          name: cursorUp
+          type: "number"
+          required: false
+        - in: query
+          name: cursorDown
+          type: "number"
+          required: false
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              list:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Message"
+              nextCursorUp:
+                type: "number"
+              nextCursorDown:
+                type: "number"
+              hasMoreOlderMessages:
+                type: "boolean"
+              hasMoreNewerMessages:
+                type: "boolean"
+        "404":
+          description: "Not found"
+        "500":
+          description: "server error"
+  /messenger/messages/roomId/{roomId}/target-message-id-by-date:
+    get:
+      tags:
+        - "Message"
+      summary: "Get target message id by date"
+      description: "Get target message id by date"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+        - in: query
+          name: date
+          type: "string"
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              targetMessageId:
+                type: "number"
+        "400":
+          description: "Invalid date"
+        "404":
+          description: "Not found"
+        "500":
+          description: "server error"
+  /messenger/messages/search:
+    get:
+      tags:
+        - "Message"
+      summary: "Get searched messages"
+      description: "Get searched messages"
+      parameters:
+        - in: query
+          name: roomId
+          type: "number"
+          required: true
+        - in: query
+          name: keyword
+          type: "string"
+          required: true
+        - in: query
+          name: itemsPerBatch
+          type: "number"
+          required: true
+        - in: query
+          name: cursor
+          type: "number"
+          required: false
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              list:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "number"
+                    messageId:
+                      type: "number"
+                    type:
+                      type: "string"
+                    body:
+                      type: "object"
+                    userId:
+                      type: "number"
+                    username:
+                      type: "string"
+                    date:
+                      type: "string"
+                      format: "date"
+              count: 
+                type: "number"
+        "400":
+          description: "Wrong parameters"
+        "404":
+          description: "Not found"
+        "500":
+          description: "server error"
 
 securityDefinitions:
   api_key:
