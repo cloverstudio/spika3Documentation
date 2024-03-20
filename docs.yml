@@ -1,2760 +1,3155 @@
 swagger: "2.0"
 info:
-    description: "This is the api specification for Spika 3"
-    version: "1.0.0"
-    title: "Spika 3 messenger API"
-    termsOfService: "http://swagger.io/terms/"
-    contact:
-        email: "info@clover.studio"
-    license:
-        name: "Apache 2.0"
-        url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  description: "This is the api specification for Spika 3"
+  version: "1.0.0"
+  title: "Spika 3 messenger API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "info@clover.studio"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: "clover.spika.chat"
 basePath: "/api/messenger"
 tags:
-    - name: "Auth"
-    - name: "Contact"
-    - name: "File"
-    - name: "Room"
-    - name: "Message"
-    - name: "Settings"
-    - name: "Sync"
+  - name: "Auth"
+  - name: "Contact"
+  - name: "File"
+  - name: "Room"
+  - name: "Message"
+  - name: "Settings"
+  - name: "Sync"
 schemes:
-    - "https"
+  - "https"
 paths:
-    /messenger/auth:
-        post:
-            tags:
-                - "Auth"
-            summary: "The first step of sign-up process"
-            description: "The first step of sign-up process"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          telephoneNumber:
-                              type: "string"
-                              required: true
-                          deviceId:
-                              type: "string"
-                              required: true
+  /messenger/auth:
+    post:
+      tags:
+        - "Auth"
+      summary: "The first step of sign-up process"
+      description: "The first step of sign-up process"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              telephoneNumber:
+                type: "string"
+                required: true
+              deviceId:
+                type: "string"
+                required: true
 
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: object
-                                properties:
-                                    isNewUser:
-                                        type: "boolean"
-                                    user:
-                                        type: "object"
-                                        $ref: "#/definitions/User"
-                                    device:
-                                        type: "object"
-                                        $ref: "#/definitions/Device"
-                                    browserDeviceId:
-                                        type: "integer"
-                                        format: "int32"
-                "400":
-                    description: "invalid param"
-                "403":
-                    description: "There is already phone number tied to this device"
-    /messenger/auth/verify:
-        post:
-            tags:
-                - "Auth"
-            summary: "Verfiy SMS code"
-            description: "Verfiy SMS code"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          code:
-                              type: "string"
-                              required: true
-                          deviceId:
-                              type: "string"
-                              required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: object
-                                properties:
-                                    user:
-                                        type: "object"
-                                        $ref: "#/definitions/User"
-                                    device:
-                                        type: "object"
-                                        $ref: "#/definitions/Device"
-                "400":
-                    description: "Bad request"
-                "403":
-                    description: "invalid verificationCode"
-                "404":
-                    description: "Device not found"
-    /messenger/auth/logout:
-        post:
-            tags:
-                - "Auth"
-            summary: "Invalidate access token"
-            description: ""
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: object
-                                properties:
-                                    device:
-                                        type: "object"
-                                        $ref: "#/definitions/Device"
-                "400":
-                    description: "invalid param"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: object
+                properties:
+                  isNewUser:
+                    type: "boolean"
+                  user:
+                    type: "object"
+                    $ref: "#/definitions/User"
+                  device:
+                    type: "object"
+                    $ref: "#/definitions/Device"
+                  browserDeviceId:
+                    type: "integer"
+                    format: "int32"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "There is already phone number tied to this device"
+  /messenger/auth/verify:
+    post:
+      tags:
+        - "Auth"
+      summary: "Verfiy SMS code"
+      description: "Verfiy SMS code"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              code:
+                type: "string"
+                required: true
+              deviceId:
+                type: "string"
+                required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: object
+                properties:
+                  user:
+                    type: "object"
+                    $ref: "#/definitions/User"
+                  device:
+                    type: "object"
+                    $ref: "#/definitions/Device"
+        "400":
+          description: "Bad request"
+        "403":
+          description: "invalid verificationCode"
+        "404":
+          description: "Device not found"
+  /messenger/auth/logout:
+    post:
+      tags:
+        - "Auth"
+      summary: "Invalidate access token"
+      description: ""
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: object
+                properties:
+                  device:
+                    type: "object"
+                    $ref: "#/definitions/Device"
+        "400":
+          description: "invalid param"
 
-    /messenger/contacts:
-        post:
-            tags:
-                - "Contact"
-            summary: "Update user contact."
-            description: "Client sends hashed phone number list to the server."
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          contacts:
-                              description: "Hashed phone numbers list"
-                              required: true
-                              type: array
-                              items:
-                                  type: string
-                                  minItems: 1
-                                  maxItems: 500
-
-            responses:
-                "200":
-                    description: "Return list of users which is already in the system"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                            data:
-                                type: "object"
-                                properties:
-                                    list:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/User"
-                                    limit:
-                                        type: "number"
-                                    count:
-                                        type: "number"
-                "400":
-                    description: "invalid param"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-        get:
-            tags:
-                - "Contact"
-            summary: "Get contacts"
-            description: "Returns users contacts"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: query
-                  name: page
-                  type: "number"
-                  minimum: 1
-                - in: query
-                  name: keyword
-                  type: "string"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    list:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/User"
-                                    count:
-                                        type: "number"
-                                    limit:
-                                        type: "number"
-                "400":
-                    description: "invalid param"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-
-    /upload/files:
-        post:
-            tags:
-                - "File"
-            summary: "Upload file chunk"
-            description: "Upload file by chunks"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          chunk:
-                              type: string
-                              required: true
-                              description: "Base64 encoded text of the chunk"
-                          offset:
-                              type: number
-                              required: true
-                              description: "The position of the chunk in the entire file"
-                          clientId:
-                              type: string
-                              required: true
-                              description: "The random string to identify upload."
-            responses:
-                "200":
-                    description: "Returns list of chunks uploaded"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                            data:
-                                type: "object"
-                                properties:
-                                    uploadedChunks:
-                                        type: "array"
-                                        items:
-                                            type: "number"
-                                            example: 1
-                "400":
-                    description: "invalid param"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-    /upload/files/verify:
-        post:
-            tags:
-                - "File"
-            summary: "Verify file"
-            description: "Creates file if all chunks are uploaded and fileHash matches"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          total:
-                              type: number
-                              required: true
-                              description: "Total number of chunks"
-                          size:
-                              type: number
-                              required: true
-                              description: "File size in bytes"
-                          mimeType:
-                              type: string
-                              required: true
-                              description: "mimeType"
-                          fileName:
-                              type: string
-                              required: true
-                              description: "File name"
-                          clientId:
-                              type: string
-                              required: true
-                              description: "The random string to identify upload."
-                          fileHash:
-                              type: string
-                              required: true
-                              description: "sha256 hash of the file"
-                          type:
-                              type: string
-                              required: true
-                              description: "The name of the another model which the file refers ex) avatar, message, group avatar"
-                          relationId:
-                              type: number
-                              required: true
-                              description: "The id of model the file refers to."
-                          metaData:
-                              description: "File metadata"
-                              schema:
-                                  type: object
-                                  properties:
-                                      duration:
-                                          type: "integer"
-                                          format: "int32"
-                                      height:
-                                          type: "integer"
-                                          format: "int32"
-                                      width:
-                                          type: "integer"
-                                          format: "int32"
-
-            responses:
-                "200":
-                    description: "Returns file object"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                            data:
-                                type: "object"
-                                properties:
-                                    file:
-                                        type: "object"
-                                        $ref: "#/definitions/File"
-                "400":
-                    description: "invalid param"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-                "409":
-                    description: "File with that clientId already exists"
-                "410":
-                    description: "Not all chunks are uploaded"
-                "411":
-                    description: "Hash doesn't match"
-    /upload/files/{id}:
-        get:
-            tags:
-                - "File"
-            summary: "Get file"
-            description: "Get file by id"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - name: "id"
-                  in: path
-                  required: true
-                  description: fileId
+  /messenger/contacts:
+    post:
+      tags:
+        - "Contact"
+      summary: "Update user contact."
+      description: "Client sends hashed phone number list to the server."
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              contacts:
+                description: "Hashed phone numbers list"
+                required: true
+                type: array
+                items:
                   type: string
-            responses:
-                "200":
-                    description: "file binary"
-                "404":
-                    description: "file not found"
+                  minItems: 1
+                  maxItems: 500
 
-    /messenger/rooms:
-        get:
-            tags:
-                - "Room"
-            summary: "Get rooms"
-            description: "Get all rooms belongs to the user"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: query
-                  name: page
-                  type: "number"
-                  minimum: 1
-                - in: query
-                  name: keyword
-                  type: "string"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    list:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/Room"
-                                    count:
-                                        type: "number"
-                                    limit:
-                                        type: "number"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-        post:
-            tags:
-                - "Room"
-            summary: "Add new room"
-            description: "Add new room"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          name:
-                              type: string
-                              required: true
-                          avatarFileId:
-                              type: integer
-                          userIds:
-                              type: array
-                              required: true
-                              items:
-                                  type: integer
-                          adminUserIds:
-                              type: array
-                              required: true
-                              items:
-                                  type: integer
-                          type:
-                              type: string
-
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    room:
-                                        type: "object"
-                                        $ref: "#/definitions/Room"
-                "409":
-                    description: "Already exists"
-                "400":
-                    description: "invalid param"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-    /messenger/rooms/users/{userId}:
-        get:
-            tags:
-                - "Room"
-            summary: "Get private room"
-            description: "Use this API to check if there is private room with user"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - name: "userId"
-                  in: path
-                  required: true
-                  type: number
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    room:
-                                        type: "object"
-                                        $ref: "#/definitions/Room"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-                "404":
-                    description: "room doesn't exist"
-    /messenger/rooms/{id}:
-        get:
-            tags:
-                - "Room"
-            summary: "Get room detail"
-            description: "Get room detail by id"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - name: "id"
-                  in: path
-                  required: true
-                  description: "room id"
-                  type: number
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        $ref: "#/definitions/Room"
-                "403":
-                    description: "invalid access token"
-                "404":
-                    description: "room not found"
-                "401":
-                    description: "access token expired"
-        put:
-            tags:
-                - "Room"
-            summary: "update a room"
-            description: "update a room"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - name: "id"
-                  in: path
-                  required: true
-                  description: "room id"
-                  type: number
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          action:
-                              type: string
-                              enum: [addGroupUsers, removeGroupUsers, addGroupAdmins, removeGroupAdmins, changeGroupName, changeGroupAvatar]
-                              required: true
-                          name:
-                              type: string
-                          avatarFileId:
-                              type: integer
-                          userIds:
-                              type: array
-                              items:
-                                  type: integer
-
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    room:
-                                        type: "object"
-                                        $ref: "#/definitions/Room"
-                "400":
-                    description: "invalid param"
-                "403":
-                    description: "no access token or user is not admin"
-                "401":
-                    description: "access token expired"
-                "404":
-                    description: "room not found"
-        delete:
-            tags:
-                - "Room"
-            summary: "Delete room"
-            description: "Delete room"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - name: "id"
-                  in: path
-                  type: number
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    room:
-                                        type: "object"
-                                        $ref: "#/definitions/Room"
-                "400":
-                    description: "invalid param"
-                "403":
-                    description: "no access token or user is not admin"
-                "401":
-                    description: "access token expired"
-                "404":
-                    description: "room not found"
-    /messenger/rooms/{id}/leave:
-        post:
-            tags:
-                - "Room"
-            summary: "Leave room"
-            description: "Leave room"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - name: "id"
-                  in: path
-                  type: number
-                  required: true
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          adminUserIds:
-                              description: "if user is last admin he must spec adminUserIds to create new admins"
-                              type: array
-                              items:
-                                  type: integer
-                                  minItems: 1
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    room:
-                                        type: "object"
-                                        $ref: "#/definitions/Room"
-                "400":
-                    description: "invalid param"
-                "404":
-                    description: "not found"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-    /messenger/rooms/{id}/mute:
-        post:
-            tags:
-                - "Room"
-            summary: "Mute room"
-            description: "Mute room"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - name: "id"
-                  in: path
-                  type: number
-                  required: true
-
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    room:
-                                        type: "object"
-                                        $ref: "#/definitions/Room"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-    /messenger/rooms/{id}/unmute:
-        post:
-            tags:
-                - "Room"
-            summary: "Unmute room"
-            description: "Unmute room"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - name: "id"
-                  in: path
-                  type: number
-                  required: true
-
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    room:
-                                        type: "object"
-                                        $ref: "#/definitions/Room"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-
-    /messenger/rooms/{id}/pin:
-        post:
-            tags:
-                - "Room"
-            summary: "Pin room"
-            description: "Pin room"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - name: "id"
-                  in: path
-                  type: number
-                  required: true
-
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    room:
-                                        type: "object"
-                                        $ref: "#/definitions/Room"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-    /messenger/rooms/{id}/unpin:
-        post:
-            tags:
-                - "Room"
-            summary: "Unpin room"
-            description: "Unpin room"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - name: "id"
-                  in: path
-                  type: number
-                  required: true
-
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    room:
-                                        type: "object"
-                                        $ref: "#/definitions/Room"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-
-    /messenger/rooms/unread-count:
-        get:
-            tags:
-                - "Room"
-            summary: "Get unread counts"
-            description: "Get unread counts for all rooms. Rooms with no unread messages are not returned"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: object
-                                properties:
-                                    unreadCounts:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            properties:
-                                                roomId:
-                                                    type: "number"
-                                                unreadCount:
-                                                    type: "number"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-    /messenger/rooms/sync/{lastUpdate}:
-        get:
-            tags:
-                - "Sync"
-                - "Room"
-            summary: "Get modified rooms after the timestamp"
-            description: ""
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: lastUpdate
-                  type: "number"
-                  required: true
-                - in: query
-                  name: page
-                  type: "number"
-                  minimum: 1
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    list:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/Room"
-                                    limit:
-                                        type: "integer"
-                                    count:
-                                        type: "integer"
-                                    hasNext:
-                                        type: "boolean"
-                "403":
-                    description: "invalid access token"
-
-    /messenger/messages:
-        post:
-            tags:
-                - "Message"
-            summary: "Send message"
-            description: "Send messsage"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          roomId:
-                              required: true
-                              type: integer
-                          type:
-                              required: true
-                              type: string
-                              enum: [text, video, audio, file, image]
-                          body:
-                              required: true
-                              type: object
-                              properties:
-                                  text:
-                                      type: string
-                                      description: "Required if type is text"
-                                  fileId:
-                                      type: number
-                                      description: "Required if type is video, audio, image or file"
-                                  thumbId:
-                                      type: number
-                          localId:
-                              type: string
-                          replyId:
-                              type: number
-
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    message:
-                                        type: "object"
-                                        $ref: "#/definitions/Message"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "room delete, room is blocked or invalid access token"
-    /messenger/messages/{id}:
-        put:
-            tags:
-                - "Message"
-            summary: "Update message"
-            description: "Update message, only available if message type is text"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - name: "id"
-                  in: path
-                  required: true
-                  type: number
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          text:
-                              type: string
-                              required: true
-
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    message:
-                                        type: "object"
-                                        $ref: "#/definitions/Message"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "user is not message owner, room is blocked or invalid access token"
-                "404":
-                    description: "message not found"
-        delete:
-            tags:
-                - "Message"
-            summary: "delete message"
-            description: "delete message"
-            parameters:
-                - in: path
-                  name: id
-                  type: "number"
-                  required: true
-                - in: query
-                  name: target
-                  type: "string"
-                  enum: [all, user]
-                  required: true
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            responses:
-                "200":
-                    description: "successful operation"
-                "404":
-                    description: "not found"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "room delete, room is blocked or invalid access token"
-    /messenger/messages/roomId/{roomId}:
-        get:
-            tags:
-                - "Message"
-            summary: "Get room messages"
-            description: "Get messages from specific room"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: roomId
-                  type: "string"
-                  required: true
-                - in: query
-                  name: page
-                  type: "number"
-                  minimum: 1
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    list:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/Message"
-                                    count:
-                                        type: "number"
-                                    limit:
-                                        type: "number"
-                "403":
-                    description: "invalid access token"
-                "401":
-                    description: "access token expired"
-    /messenger/messages/sync/{lastUpdate}:
-        get:
-            tags:
-                - "Message"
-                - "Sync"
-            summary: "Get all messages received after the timestamp"
-            description: "Get all messages received after the timestamp"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: lastUpdate
-                  type: "number"
-                  required: true
-                - in: query
-                  name: page
-                  type: "number"
-                  minimum: 1
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    list:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/Message"
-                                    limit:
-                                        type: "integer"
-                                    count:
-                                        type: "integer"
-                                    hasNext:
-                                        type: "boolean"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-    /messenger/messages/sync/modified/{lastUpdate}:
-        get:
-            tags:
-                - "Message"
-                - "Sync"
-            summary: "Get all messages modified after the timestamp"
-            description: "Get all messages modified after the timestamp"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: lastUpdate
-                  type: "number"
-                  required: true
-                - in: query
-                  name: page
-                  type: "number"
-                  minimum: 1
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    list:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/Message"
-                                    limit:
-                                        type: "integer"
-                                    count:
-                                        type: "integer"
-                                    hasNext:
-                                        type: "boolean"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-    /messenger/messages/{messageId}/message-records:
-        get:
-            tags:
-                - Message
-                - MessageRecord
-            summary: "Get all message records for specific message"
-            description: "Get all message records for specific message"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: messageId
-                  type: "string"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    messageRecords:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/MessageRecord"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-                "404":
-                    description: "message not found"
-    /messenger/messages/delivered:
-        post:
-            tags:
-                - "Message"
-            summary: "Flag messages as delivered"
-            description: "Notify backend messages are saved in client side."
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          messageIds:
-                              required: true
-                              type: array
-                              items:
-                                  type: number
-                                  minItems: 1
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    messageRecords:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/MessageRecord"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-    /messenger/messages/{roomId}/seen:
-        post:
-            tags:
-                - "Message"
-            summary: "Flag all room messages as seen"
-            description: "Notify backend when message are shown in the client side first time."
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: roomId
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    messageRecords:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/MessageRecord"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-    /messenger/messages/forward:
-        post:
-            tags:
-                - "Message"
-            summary: "Forward messages"
-            description: "Forward messages"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          roomIds:
-                              type: array
-                              items:
-                                  type: number
-                                  minItems: 1
-                          messageIds:
-                              required: true
-                              type: array
-                              items:
-                                  type: number
-                                  minItems: 1
-                          userIds:
-                              type: array
-                              items:
-                                  type: number
-                                  minItems: 1
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    messages:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/Message"
-                                    newRooms:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/Room"
-                "400":
-                    description: "invalid param"
-
-    /messenger/message-records:
-        post:
-            tags:
-                - "MessageRecord"
-            summary: "Add reaction message record"
-            description: "Add reaction message record"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          messageId:
-                              required: true
-                              type: number
-                          reaction:
-                              type: string
-                              description: "Required if type is reaction"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    messageRecord:
-                                        type: "object"
-                                        $ref: "#/definitions/MessageRecord"
-                "400":
-                    description: "invalid param"
-    /messenger/message-records/{id}:
-        delete:
-            tags:
-                - "MessageRecord"
-            summary: "Delete reaction message record"
-            description: "Delete reaction message record"
-            parameters:
-                - in: path
-                  name: id
-                  type: "number"
-                  required: true
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            responses:
-                "200":
-                    description: "successful operation"
-                "404":
-                    description: "not found"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-    /messenger/message-records/sync/{lastUpdate}:
-        get:
-            tags:
-                - "Sync"
-                - "MessageRecord"
-            summary: "Get all message records updated since last update"
-            description: "Get all message records updated since last update"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: lastUpdate
-                  type: "number"
-                  required: true
-                - in: query
-                  name: page
-                  type: "number"
-                  minimum: 1
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    list:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/MessageRecord"
-                                    limit:
-                                        type: "integer"
-                                    count:
-                                        type: "integer"
-                                    hasNext:
-                                        type: "boolean"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-    /messenger/me:
-        get:
-            tags:
-                - "User"
-            summary: "Get authenticated user"
-            description: "Returns user model"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    user:
-                                        type: "object"
-                                        $ref: "#/definitions/User"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-        put:
-            tags:
-                - "User"
-            summary: "Update authenticated user"
-            description: "Updates and returns user model"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          telephoneNumber:
-                              type: string
-                          emailAddress:
-                              type: string
-                          displayName:
-                              type: string
-                          avatarFileId:
-                              type: integer
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    user:
-                                        type: "object"
-                                        $ref: "#/definitions/User"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-        delete:
-            tags:
-                - "User"
-            summary: "Delete authenticated user"
-            description: "Delete authenticated user"
-            produces:
-                - "application/json"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            deleted:
-                                type: "boolean"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "Invalid access token"
-
-    /messenger/users/{id}:
-        get:
-            tags:
-                - "User"
-            summary: "Get user detail"
-            description: "Returns user model by id"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: id
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    user:
-                                        type: "object"
-                                        $ref: "#/definitions/User"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-                "404":
-                    description: "not found"
-    /messenger/users/sync/{timestamp}:
-        get:
-            tags:
-                - "User"
-                - "Sync"
-            summary: "Get updated users from specified time"
-            description: "Returns users models"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: timestamp
-                  type: "number"
-                  required: true
-                - in: query
-                  name: page
-                  type: "number"
-                  minimum: 1
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: object
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    list:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/User"
-                                    limit:
-                                        type: "integer"
-                                    count:
-                                        type: "integer"
-                                    hasNext:
-                                        type: "boolean"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-    /messenger/history:
-        get:
-            tags:
-                - "History"
-            summary: "Get last updated rooms"
-            description: "Returns last updated rooms"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: query
-                  name: page
-                  type: "number"
-                  minimum: 1
-                - in: query
-                  name: keyword
-                  type: "string"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    list:
-                                        type: "array"
-                                        items:
-                                            allOf:
-                                                - $ref: "#/definitions/Room"
-                                                - type: "object"
-                                                  properties:
-                                                      lastMessage:
-                                                          type: "object"
-                                                          $ref: "#/definitions/Message"
-                                                      unreadCount:
-                                                          type: "number"
-                                    count:
-                                        type: "number"
-                                    limit:
-                                        type: "number"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-    /messenger/device:
-        get:
-            tags:
-                - "Device"
-            summary: "Get current device"
-            description: "Returns device tied to current access token"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    device:
-                                        type: "object"
-                                        $ref: "#/definitions/Device"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-        put:
-            tags:
-                - "Device"
-            summary: "Update push token"
-            description: "Returns device tied to current access token"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          pushToken:
-                              type: string
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    device:
-                                        type: "object"
-                                        $ref: "#/definitions/Device"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-    /messenger/settings:
-        get:
-            tags:
-                - "Settings"
-            summary: "Return server settings to client"
-            description: "Return server settings to client"
-            produces:
-                - "application/json"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    teamMode:
-                                        type: "boolean"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-    /messenger/webhooks/roomId/{roomId}:
-        get:
-            tags:
-                - "Webhook"
-            summary: "Get webhooks for specific room"
-            description: "Get webhooks by roomId"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: roomId
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    webhooks:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/Webhook"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not room admin or invalid access token"
-        post:
-            tags:
-                - "Webhook"
-            summary: "Create webhook for specific room"
-            description: "Create webhook for specific room"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: roomId
-                  type: "number"
-                  required: true
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          url:
-                              type: string
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    webhook:
-                                        type: "object"
-                                        $ref: "#/definitions/Webhook"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not room admin or invalid access token"
-
-    /messenger/webhooks/{id}:
-        put:
-            tags:
-                - "Webhook"
-            summary: "Update webhook"
-            description: "Update webhook by id"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: id
-                  type: "number"
-                  required: true
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          url:
-                              type: string
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    webhook:
-                                        type: "object"
-                                        $ref: "#/definitions/Webhook"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not room admin or invalid access token"
-                "404":
-                    description: "not found"
-        delete:
-            tags:
-                - "Webhook"
-            summary: "Delete webhook"
-            description: "Delete webhook by id"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: id
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            deleted:
-                                type: "boolean"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not room admin or invalid access token"
-                "404":
-                    description: "not found"
-
-    /messenger/api-keys/roomId/{roomId}:
-        get:
-            tags:
-                - "ApiKey"
-            summary: "Get api keys for specific room"
-            description: "Get api keys by roomId"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: roomId
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    apiKeys:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/ApiKey"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not room admin or invalid access token"
-        post:
-            tags:
-                - "ApiKey"
-            summary: "Create api key for specific room"
-            description: "Create api key for specific room"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: roomId
-                  type: "number"
-                  required: true
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          displayName:
-                              type: string
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    apiKey:
-                                        type: "object"
-                                        $ref: "#/definitions/ApiKey"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not room admin or invalid access token"
-
-    /messenger/api-keys/{id}:
-        put:
-            tags:
-                - "ApiKey"
-            summary: "Update api key"
-            description: "Update api key by id"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: id
-                  type: "number"
-                  required: true
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          displayName:
-                              type: string
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    apiKey:
-                                        type: "object"
-                                        $ref: "#/definitions/ApiKey"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not room admin or invalid access token"
-                "404":
-                    description: "not found"
-        delete:
-            tags:
-                - "ApiKey"
-            summary: "Delete api key"
-            description: "Delete api key by id"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: id
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            deleted:
-                                type: "boolean"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not room admin or invalid access token"
-                "404":
-                    description: "not found"
-
-    /messenger/blocks:
-        get:
-            tags:
-                - "Block"
-            summary: "Get blocked list"
-            description: "Get users blocked list"
-            produces:
-                - "application/json"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    blockedUsers:
-                                        type: "array"
-                                        items:
-                                            type: "integer"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-        post:
-            tags:
-                - "Block"
-            summary: "Create block"
-            description: "Create block"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          blockedId:
-                              type: number
-                              required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    block:
-                                        type: "object"
-                                        $ref: "#/definitions/Block"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-    /messenger/blocks/{id}:
-        delete:
-            tags:
-                - "Block"
-            summary: "Delete block"
-            description: "Delete block by id"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: id
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    deleted:
-                                        type: "boolean"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-    /messenger/blocks/userId/{userId}:
-        delete:
-            tags:
-                - "Block"
-            summary: "Delete block for specific user"
-            description: "Delete block by userId"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: userId
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    deleted:
-                                        type: "boolean"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-    /messenger/blocks/rooms/{roomId}:
-        get:
-            tags:
-                - "Block"
-            summary: "Return block list for specific private room"
-            description: "Return block list for specific private room"
-            produces:
-                - "application/json"
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    block:
-                                        type: "object"
-                                        $ref: "#/definitions/Block"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "invalid access token"
-
-    /messenger/notes/roomId/{roomId}:
-        get:
-            tags:
-                - "Note"
-            summary: "Return room notes"
-            description: "Return room notes"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: roomId
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    notes:
-                                        type: "array"
-                                        items:
-                                            type: "object"
-                                            $ref: "#/definitions/Note"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not in room or invalid access token"
-        post:
-            tags:
-                - "Note"
-            summary: "Create note"
-            description: "Create note"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: roomId
-                  type: "number"
-                  required: true
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          title:
-                              type: string
-                              maxLength: 135
-                              minLength: 1
-                          content:
-                              type: string
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    note:
-                                        type: "object"
-                                        $ref: "#/definitions/Note"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not in room or invalid access token"
-
-    /messenger/notes/{id}:
-        get:
-            tags:
-                - "Note"
-            summary: "Return note detail"
-            description: "Return note detail"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: id
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    note:
-                                        type: "object"
-                                        $ref: "#/definitions/Note"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not in room or invalid access token"
-                "404":
-                    description: "not found"
-        delete:
-            tags:
-                - "Note"
-            summary: "Delete note"
-            description: "Delete note by id"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: id
-                  type: "number"
-                  required: true
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    deleted:
-                                        type: "boolean"
-
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not in room or invalid access token"
-                "404":
-                    description: "not found"
-        put:
-            tags:
-                - "Note"
-            summary: "Update note"
-            description: "Update note by id"
-            consumes:
-                - "application/json"
-            produces:
-                - "application/json"
-            parameters:
-                - in: path
-                  name: id
-                  type: "number"
-                  required: true
-                - in: "body"
-                  schema:
-                      type: "object"
-                      properties:
-                          title:
-                              type: string
-                              maxLength: 135
-                              minLength: 1
-                          content:
-                              type: string
-            responses:
-                "200":
-                    description: "successful operation"
-                    schema:
-                        type: "object"
-                        properties:
-                            status:
-                                type: "string"
-                                enum: [success, error]
-                            data:
-                                type: "object"
-                                properties:
-                                    note:
-                                        type: "object"
-                                        $ref: "#/definitions/Note"
-                "400":
-                    description: "invalid param"
-                "401":
-                    description: "access token expired"
-                "403":
-                    description: "not in room or invalid access token"
-                "404":
-                    description: "not found"
-
-securityDefinitions:
-    api_key:
-        type: "apiKey"
-        name: "accesstoken"
-        in: "header"
-
-definitions:
-    User:
-        type: "object"
-        properties:
-            id:
-                type: "integer"
-                format: "int32"
-            displayName:
+      responses:
+        "200":
+          description: "Return list of users which is already in the system"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-                format: "string"
-            avatarFileId:
-                type: "integer"
-                format: "int32"
-            telephoneNumber:
+              data:
+                type: "object"
+                properties:
+                  list:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/User"
+                  limit:
+                    type: "number"
+                  count:
+                    type: "number"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+    get:
+      tags:
+        - "Contact"
+      summary: "Get contacts"
+      description: "Returns users contacts"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: page
+          type: "number"
+          minimum: 1
+        - in: query
+          name: keyword
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-                format: "string"
-            telephoneNumberHashed:
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  list:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/User"
+                  count:
+                    type: "number"
+                  limit:
+                    type: "number"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+
+  /upload/files:
+    post:
+      tags:
+        - "File"
+      summary: "Upload file chunk"
+      description: "Upload file by chunks"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              chunk:
+                type: string
+                required: true
+                description: "Base64 encoded text of the chunk"
+              offset:
+                type: number
+                required: true
+                description: "The position of the chunk in the entire file"
+              clientId:
+                type: string
+                required: true
+                description: "The random string to identify upload."
+      responses:
+        "200":
+          description: "Returns list of chunks uploaded"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-                format: "string"
-            emailAddress:
+              data:
+                type: "object"
+                properties:
+                  uploadedChunks:
+                    type: "array"
+                    items:
+                      type: "number"
+                      example: 1
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+  /upload/files/verify:
+    post:
+      tags:
+        - "File"
+      summary: "Verify file"
+      description: "Creates file if all chunks are uploaded and fileHash matches"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              total:
+                type: number
+                required: true
+                description: "Total number of chunks"
+              size:
+                type: number
+                required: true
+                description: "File size in bytes"
+              mimeType:
+                type: string
+                required: true
+                description: "mimeType"
+              fileName:
+                type: string
+                required: true
+                description: "File name"
+              clientId:
+                type: string
+                required: true
+                description: "The random string to identify upload."
+              fileHash:
+                type: string
+                required: true
+                description: "sha256 hash of the file"
+              type:
+                type: string
+                required: true
+                description: "The name of the another model which the file refers ex) avatar, message, group avatar"
+              relationId:
+                type: number
+                required: true
+                description: "The id of model the file refers to."
+              metaData:
+                description: "File metadata"
+                schema:
+                  type: object
+                  properties:
+                    duration:
+                      type: "integer"
+                      format: "int32"
+                    height:
+                      type: "integer"
+                      format: "int32"
+                    width:
+                      type: "integer"
+                      format: "int32"
+
+      responses:
+        "200":
+          description: "Returns file object"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-                format: "string"
-            createdAt:
-                type: "integer"
-                format: "int32"
-            modifiedAt:
-                type: "integer"
-                format: "int32"
-            verified:
+              data:
+                type: "object"
+                properties:
+                  file:
+                    type: "object"
+                    $ref: "#/definitions/File"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+        "409":
+          description: "File with that clientId already exists"
+        "410":
+          description: "Not all chunks are uploaded"
+        "411":
+          description: "Hash doesn't match"
+  /upload/files/{id}:
+    get:
+      tags:
+        - "File"
+      summary: "Get file"
+      description: "Get file by id"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          description: fileId
+          type: string
+      responses:
+        "200":
+          description: "file binary"
+        "404":
+          description: "file not found"
+
+  /messenger/rooms:
+    get:
+      tags:
+        - "Room"
+      summary: "Get rooms"
+      description: "Get all rooms belongs to the user"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: page
+          type: "number"
+          minimum: 1
+        - in: query
+          name: keyword
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  list:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/Room"
+                  count:
+                    type: "number"
+                  limit:
+                    type: "number"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+    post:
+      tags:
+        - "Room"
+      summary: "Add new room"
+      description: "Add new room"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              name:
+                type: string
+                required: true
+              avatarFileId:
+                type: integer
+              userIds:
+                type: array
+                required: true
+                items:
+                  type: integer
+              adminUserIds:
+                type: array
+                required: true
+                items:
+                  type: integer
+              type:
+                type: string
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  room:
+                    type: "object"
+                    $ref: "#/definitions/Room"
+        "409":
+          description: "Already exists"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+  /messenger/rooms/users/{userId}:
+    get:
+      tags:
+        - "Room"
+      summary: "Get private room"
+      description: "Use this API to check if there is private room with user"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "userId"
+          in: path
+          required: true
+          type: number
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  room:
+                    type: "object"
+                    $ref: "#/definitions/Room"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+        "404":
+          description: "room doesn't exist"
+  /messenger/rooms/{id}:
+    get:
+      tags:
+        - "Room"
+      summary: "Get room detail"
+      description: "Get room detail by id"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          description: "room id"
+          type: number
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            $ref: "#/definitions/Room"
+        "403":
+          description: "invalid access token"
+        "404":
+          description: "room not found"
+        "401":
+          description: "access token expired"
+    put:
+      tags:
+        - "Room"
+      summary: "update a room"
+      description: "update a room"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          description: "room id"
+          type: number
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              action:
+                type: string
+                enum:
+                  [
+                    addGroupUsers,
+                    removeGroupUsers,
+                    addGroupAdmins,
+                    removeGroupAdmins,
+                    changeGroupName,
+                    changeGroupAvatar,
+                  ]
+                required: true
+              name:
+                type: string
+              avatarFileId:
+                type: integer
+              userIds:
+                type: array
+                items:
+                  type: integer
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  room:
+                    type: "object"
+                    $ref: "#/definitions/Room"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "no access token or user is not admin"
+        "401":
+          description: "access token expired"
+        "404":
+          description: "room not found"
+    delete:
+      tags:
+        - "Room"
+      summary: "Delete room"
+      description: "Delete room"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          type: number
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  room:
+                    type: "object"
+                    $ref: "#/definitions/Room"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "no access token or user is not admin"
+        "401":
+          description: "access token expired"
+        "404":
+          description: "room not found"
+  /messenger/rooms/{id}/leave:
+    post:
+      tags:
+        - "Room"
+      summary: "Leave room"
+      description: "Leave room"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          type: number
+          required: true
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              adminUserIds:
+                description: "if user is last admin he must spec adminUserIds to create new admins"
+                type: array
+                items:
+                  type: integer
+                  minItems: 1
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  room:
+                    type: "object"
+                    $ref: "#/definitions/Room"
+        "400":
+          description: "invalid param"
+        "404":
+          description: "not found"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+  /messenger/rooms/{id}/mute:
+    post:
+      tags:
+        - "Room"
+      summary: "Mute room"
+      description: "Mute room"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          type: number
+          required: true
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  room:
+                    type: "object"
+                    $ref: "#/definitions/Room"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+  /messenger/rooms/{id}/unmute:
+    post:
+      tags:
+        - "Room"
+      summary: "Unmute room"
+      description: "Unmute room"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          type: number
+          required: true
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  room:
+                    type: "object"
+                    $ref: "#/definitions/Room"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+
+  /messenger/rooms/{id}/pin:
+    post:
+      tags:
+        - "Room"
+      summary: "Pin room"
+      description: "Pin room"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          type: number
+          required: true
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  room:
+                    type: "object"
+                    $ref: "#/definitions/Room"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+  /messenger/rooms/{id}/unpin:
+    post:
+      tags:
+        - "Room"
+      summary: "Unpin room"
+      description: "Unpin room"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          type: number
+          required: true
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  room:
+                    type: "object"
+                    $ref: "#/definitions/Room"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+
+  /messenger/rooms/unread-count:
+    get:
+      tags:
+        - "Room"
+      summary: "Get unread counts"
+      description: "Get unread counts for all rooms. Rooms with no unread messages are not returned"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: object
+                properties:
+                  unreadCounts:
+                    type: "array"
+                    items:
+                      type: "object"
+                      properties:
+                        roomId:
+                          type: "number"
+                        unreadCount:
+                          type: "number"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+  /messenger/rooms/sync/{lastUpdate}:
+    get:
+      tags:
+        - "Sync"
+        - "Room"
+      summary: "Get modified rooms after the timestamp"
+      description: ""
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: lastUpdate
+          type: "number"
+          required: true
+        - in: query
+          name: page
+          type: "number"
+          minimum: 1
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  list:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/Room"
+                  limit:
+                    type: "integer"
+                  count:
+                    type: "integer"
+                  hasNext:
+                    type: "boolean"
+        "403":
+          description: "invalid access token"
+
+  /messenger/messages:
+    post:
+      tags:
+        - "Message"
+      summary: "Send message"
+      description: "Send messsage"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              roomId:
+                required: true
+                type: integer
+              type:
+                required: true
+                type: string
+                enum: [text, video, audio, file, image]
+              body:
+                required: true
+                type: object
+                properties:
+                  text:
+                    type: string
+                    description: "Required if type is text"
+                  fileId:
+                    type: number
+                    description: "Required if type is video, audio, image or file"
+                  thumbId:
+                    type: number
+              localId:
+                type: string
+              replyId:
+                type: number
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  message:
+                    type: "object"
+                    $ref: "#/definitions/Message"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "room delete, room is blocked or invalid access token"
+  /messenger/messages/{id}:
+    put:
+      tags:
+        - "Message"
+      summary: "Update message"
+      description: "Update message, only available if message type is text"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          type: number
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              text:
+                type: string
+                required: true
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  message:
+                    type: "object"
+                    $ref: "#/definitions/Message"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "user is not message owner, room is blocked or invalid access token"
+        "404":
+          description: "message not found"
+    delete:
+      tags:
+        - "Message"
+      summary: "delete message"
+      description: "delete message"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+        - in: query
+          name: target
+          type: "string"
+          enum: [all, user]
+          required: true
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+        "404":
+          description: "not found"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "room delete, room is blocked or invalid access token"
+  /messenger/messages/roomId/{roomId}:
+    get:
+      tags:
+        - "Message"
+      summary: "Get room messages"
+      description: "Get messages from specific room"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: roomId
+          type: "string"
+          required: true
+        - in: query
+          name: page
+          type: "number"
+          minimum: 1
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  list:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/Message"
+                  count:
+                    type: "number"
+                  limit:
+                    type: "number"
+        "403":
+          description: "invalid access token"
+        "401":
+          description: "access token expired"
+  /messenger/messages/sync/{lastUpdate}:
+    get:
+      tags:
+        - "Message"
+        - "Sync"
+      summary: "Get all messages received after the timestamp"
+      description: "Get all messages received after the timestamp"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: lastUpdate
+          type: "number"
+          required: true
+        - in: query
+          name: page
+          type: "number"
+          minimum: 1
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  list:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/Message"
+                  limit:
+                    type: "integer"
+                  count:
+                    type: "integer"
+                  hasNext:
+                    type: "boolean"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+  /messenger/messages/sync/modified/{lastUpdate}:
+    get:
+      tags:
+        - "Message"
+        - "Sync"
+      summary: "Get all messages modified after the timestamp"
+      description: "Get all messages modified after the timestamp"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: lastUpdate
+          type: "number"
+          required: true
+        - in: query
+          name: page
+          type: "number"
+          minimum: 1
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  list:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/Message"
+                  limit:
+                    type: "integer"
+                  count:
+                    type: "integer"
+                  hasNext:
+                    type: "boolean"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+  /messenger/messages/{messageId}/message-records:
+    get:
+      tags:
+        - Message
+        - MessageRecord
+      summary: "Get all message records for specific message"
+      description: "Get all message records for specific message"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: messageId
+          type: "string"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  messageRecords:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/MessageRecord"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+        "404":
+          description: "message not found"
+  /messenger/messages/delivered:
+    post:
+      tags:
+        - "Message"
+      summary: "Flag messages as delivered"
+      description: "Notify backend messages are saved in client side."
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              messageIds:
+                required: true
+                type: array
+                items:
+                  type: number
+                  minItems: 1
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  messageRecords:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/MessageRecord"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+  /messenger/messages/{roomId}/seen:
+    post:
+      tags:
+        - "Message"
+      summary: "Flag all room messages as seen"
+      description: "Notify backend when message are shown in the client side first time."
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  messageRecords:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/MessageRecord"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+  /messenger/messages/forward:
+    post:
+      tags:
+        - "Message"
+      summary: "Forward messages"
+      description: "Forward messages"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              roomIds:
+                type: array
+                items:
+                  type: number
+                  minItems: 1
+              messageIds:
+                required: true
+                type: array
+                items:
+                  type: number
+                  minItems: 1
+              userIds:
+                type: array
+                items:
+                  type: number
+                  minItems: 1
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  messages:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/Message"
+                  newRooms:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/Room"
+        "400":
+          description: "invalid param"
+
+  /messenger/message-records:
+    post:
+      tags:
+        - "MessageRecord"
+      summary: "Add reaction message record"
+      description: "Add reaction message record"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              messageId:
+                required: true
+                type: number
+              reaction:
+                type: string
+                description: "Required if type is reaction"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  messageRecord:
+                    type: "object"
+                    $ref: "#/definitions/MessageRecord"
+        "400":
+          description: "invalid param"
+  /messenger/message-records/{id}:
+    delete:
+      tags:
+        - "MessageRecord"
+      summary: "Delete reaction message record"
+      description: "Delete reaction message record"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+        "404":
+          description: "not found"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+  /messenger/message-records/sync/{lastUpdate}:
+    get:
+      tags:
+        - "Sync"
+        - "MessageRecord"
+      summary: "Get all message records updated since last update"
+      description: "Get all message records updated since last update"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: lastUpdate
+          type: "number"
+          required: true
+        - in: query
+          name: page
+          type: "number"
+          minimum: 1
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  list:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/MessageRecord"
+                  limit:
+                    type: "integer"
+                  count:
+                    type: "integer"
+                  hasNext:
+                    type: "boolean"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+  /messenger/me:
+    get:
+      tags:
+        - "User"
+      summary: "Get authenticated user"
+      description: "Returns user model"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  user:
+                    type: "object"
+                    $ref: "#/definitions/User"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+    put:
+      tags:
+        - "User"
+      summary: "Update authenticated user"
+      description: "Updates and returns user model"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              telephoneNumber:
+                type: string
+              emailAddress:
+                type: string
+              displayName:
+                type: string
+              avatarFileId:
+                type: integer
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  user:
+                    type: "object"
+                    $ref: "#/definitions/User"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+    delete:
+      tags:
+        - "User"
+      summary: "Delete authenticated user"
+      description: "Delete authenticated user"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              deleted:
                 type: "boolean"
-            deleted:
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "Invalid access token"
+
+  /messenger/users/{id}:
+    get:
+      tags:
+        - "User"
+      summary: "Get user detail"
+      description: "Returns user model by id"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  user:
+                    type: "object"
+                    $ref: "#/definitions/User"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+        "404":
+          description: "not found"
+  /messenger/users/sync/{timestamp}:
+    get:
+      tags:
+        - "User"
+        - "Sync"
+      summary: "Get updated users from specified time"
+      description: "Returns users models"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: timestamp
+          type: "number"
+          required: true
+        - in: query
+          name: page
+          type: "number"
+          minimum: 1
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  list:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/User"
+                  limit:
+                    type: "integer"
+                  count:
+                    type: "integer"
+                  hasNext:
+                    type: "boolean"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+  /messenger/history:
+    get:
+      tags:
+        - "History"
+      summary: "Get last updated rooms"
+      description: "Returns last updated rooms"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: page
+          type: "number"
+          minimum: 1
+        - in: query
+          name: keyword
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  list:
+                    type: "array"
+                    items:
+                      allOf:
+                        - $ref: "#/definitions/Room"
+                        - type: "object"
+                          properties:
+                            lastMessage:
+                              type: "object"
+                              $ref: "#/definitions/Message"
+                            unreadCount:
+                              type: "number"
+                  count:
+                    type: "number"
+                  limit:
+                    type: "number"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+  /messenger/device:
+    get:
+      tags:
+        - "Device"
+      summary: "Get current device"
+      description: "Returns device tied to current access token"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  device:
+                    type: "object"
+                    $ref: "#/definitions/Device"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+    put:
+      tags:
+        - "Device"
+      summary: "Update push token"
+      description: "Returns device tied to current access token"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              pushToken:
+                type: string
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  device:
+                    type: "object"
+                    $ref: "#/definitions/Device"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+  /messenger/settings:
+    get:
+      tags:
+        - "Settings"
+      summary: "Return server settings to client"
+      description: "Return server settings to client"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  teamMode:
+                    type: "boolean"
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+  /messenger/webhooks/roomId/{roomId}:
+    get:
+      tags:
+        - "Webhook"
+      summary: "Get webhooks for specific room"
+      description: "Get webhooks by roomId"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  webhooks:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/Webhook"
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not room admin or invalid access token"
+    post:
+      tags:
+        - "Webhook"
+      summary: "Create webhook for specific room"
+      description: "Create webhook for specific room"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              url:
+                type: string
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  webhook:
+                    type: "object"
+                    $ref: "#/definitions/Webhook"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not room admin or invalid access token"
+
+  /messenger/webhooks/{id}:
+    put:
+      tags:
+        - "Webhook"
+      summary: "Update webhook"
+      description: "Update webhook by id"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              url:
+                type: string
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  webhook:
+                    type: "object"
+                    $ref: "#/definitions/Webhook"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not room admin or invalid access token"
+        "404":
+          description: "not found"
+    delete:
+      tags:
+        - "Webhook"
+      summary: "Delete webhook"
+      description: "Delete webhook by id"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              deleted:
                 type: "boolean"
-            isBot:
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not room admin or invalid access token"
+        "404":
+          description: "not found"
+
+  /messenger/api-keys/roomId/{roomId}:
+    get:
+      tags:
+        - "ApiKey"
+      summary: "Get api keys for specific room"
+      description: "Get api keys by roomId"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  apiKeys:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/ApiKey"
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not room admin or invalid access token"
+    post:
+      tags:
+        - "ApiKey"
+      summary: "Create api key for specific room"
+      description: "Create api key for specific room"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              displayName:
+                type: string
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  apiKey:
+                    type: "object"
+                    $ref: "#/definitions/ApiKey"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not room admin or invalid access token"
+
+  /messenger/api-keys/{id}:
+    put:
+      tags:
+        - "ApiKey"
+      summary: "Update api key"
+      description: "Update api key by id"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              displayName:
+                type: string
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  apiKey:
+                    type: "object"
+                    $ref: "#/definitions/ApiKey"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not room admin or invalid access token"
+        "404":
+          description: "not found"
+    delete:
+      tags:
+        - "ApiKey"
+      summary: "Delete api key"
+      description: "Delete api key by id"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              deleted:
                 type: "boolean"
-    Device:
-        type: "object"
-        properties:
-            id:
-                type: "integer"
-                format: "int32"
-            userId:
-                type: "integer"
-                format: "int32"
-            token:
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not room admin or invalid access token"
+        "404":
+          description: "not found"
+
+  /messenger/blocks:
+    get:
+      tags:
+        - "Block"
+      summary: "Get blocked list"
+      description: "Get users blocked list"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-                format: "string"
-            tokenExpiredAt:
-                type: "integer"
-                format: "int32"
-            osName:
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  blockedUsers:
+                    type: "array"
+                    items:
+                      type: "integer"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+    post:
+      tags:
+        - "Block"
+      summary: "Create block"
+      description: "Create block"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              blockedId:
+                type: number
+                required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-                format: "string"
-            osVersion:
-                type: "integer"
-                format: "int32"
-            appVersion:
-                type: "integer"
-                format: "int32"
-            pushToken:
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  block:
+                    type: "object"
+                    $ref: "#/definitions/Block"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+  /messenger/blocks/{id}:
+    delete:
+      tags:
+        - "Block"
+      summary: "Delete block"
+      description: "Delete block by id"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-                format: "string"
-    File:
-        type: "object"
-        properties:
-            id:
-                type: "integer"
-                format: "int32"
-            fileName:
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  deleted:
+                    type: "boolean"
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+  /messenger/blocks/userId/{userId}:
+    delete:
+      tags:
+        - "Block"
+      summary: "Delete block for specific user"
+      description: "Delete block by userId"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: userId
+          type: "number"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-            size:
-                type: "integer"
-                format: "int32"
-            mimeType:
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  deleted:
+                    type: "boolean"
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+  /messenger/blocks/rooms/{roomId}:
+    get:
+      tags:
+        - "Block"
+      summary: "Return block list for specific private room"
+      description: "Return block list for specific private room"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-            type:
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  block:
+                    type: "object"
+                    $ref: "#/definitions/Block"
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "invalid access token"
+
+  /messenger/notes/roomId/{roomId}:
+    get:
+      tags:
+        - "Note"
+      summary: "Return room notes"
+      description: "Return room notes"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-            metaData:
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  notes:
+                    type: "array"
+                    items:
+                      type: "object"
+                      $ref: "#/definitions/Note"
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not in room or invalid access token"
+    post:
+      tags:
+        - "Note"
+      summary: "Create note"
+      description: "Create note"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              title:
+                type: string
+                maxLength: 135
+                minLength: 1
+              content:
+                type: string
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-                description: "JSON value containing duration, width, height"
-            relationId:
-                type: "integer"
-                format: "int32"
-            clientId:
-                type: "integer"
-                format: "int32"
-            createdAt:
-                type: "integer"
-                format: "int32"
-    Room:
-        type: "object"
-        properties:
-            id:
-                type: "integer"
-                format: "int32"
-            name:
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  note:
+                    type: "object"
+                    $ref: "#/definitions/Note"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not in room or invalid access token"
+
+  /messenger/notes/{id}:
+    get:
+      tags:
+        - "Note"
+      summary: "Return note detail"
+      description: "Return note detail"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
                 type: "string"
-            users:
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  note:
+                    type: "object"
+                    $ref: "#/definitions/Note"
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not in room or invalid access token"
+        "404":
+          description: "not found"
+    delete:
+      tags:
+        - "Note"
+      summary: "Delete note"
+      description: "Delete note by id"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  deleted:
+                    type: "boolean"
+
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not in room or invalid access token"
+        "404":
+          description: "not found"
+    put:
+      tags:
+        - "Note"
+      summary: "Update note"
+      description: "Update note by id"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: path
+          name: id
+          type: "number"
+          required: true
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              title:
+                type: string
+                maxLength: 135
+                minLength: 1
+              content:
+                type: string
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                enum: [success, error]
+              data:
+                type: "object"
+                properties:
+                  note:
+                    type: "object"
+                    $ref: "#/definitions/Note"
+        "400":
+          description: "invalid param"
+        "401":
+          description: "access token expired"
+        "403":
+          description: "not in room or invalid access token"
+        "404":
+          description: "not found"
+
+  /messenger/messages/share:
+    post:
+      tags:
+        - "Message"
+      summary: "Share message"
+      description: "Share message on mobile"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          schema:
+            type: "object"
+            properties:
+              roomIds:
                 type: "array"
                 items:
-                    type: "object"
-                    properties:
-                        userId:
-                            type: "integer"
-                            format: "int32"
-                        roomId:
-                            type: "integer"
-                            format: "int32"
-                        isAdmin:
-                            type: boolean
-                        user:
-                            type: "object"
-                            $ref: "#/definitions/User"
-            avatarFileId:
-                type: "integer"
-                format: "int32"
-            muted:
-                type: "boolean"
-            pinned:
-                type: "boolean"
-            deleted:
-                type: "boolean"
-            type:
-                type: "string"
-            unreadCount:
-                type: "integer"
-                format: "int32"
-            createdAt:
-                type: "integer"
-                format: "int32"
-            modifiedAt:
-                type: "integer"
-                format: "int32"
-    Message:
-        type: "object"
-        properties:
-            id:
-                type: "integer"
-                format: "int32"
-            roomId:
-                type: "integer"
-                format: "int32"
-            fromUserId:
-                type: "integer"
-                format: "int32"
-            totalUserCount:
-                type: "integer"
-                format: "int32"
-            deliveredCount:
-                type: "integer"
-                format: "int32"
-            seenCount:
-                type: "integer"
-                format: "int32"
-            type:
-                type: "string"
-            body:
+                  type: "number"
+                required: true
+              messages:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    body:
+                      type: "object"
+                      required: true
+                    type:
+                      type: "string"
+                required: true
+              userIds:
+                type: "array"
+                items:
+                  type: "number"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              messages:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Message"
+              newRooms:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Room"
+        "400":
+          description: "invalid param"
+        "403":
+          description: "invalid access token"
+        "500":
+          description: "Server error"
+
+  /messenger/gallery:
+    get:
+      tags:
+        - "Media"
+      summary: "Get media"
+      description: "Get all images and videos of room"
+      parameters:
+        - in: query
+          name: roomId
+          type: "number"
+          required: true
+        - in: query
+          name: cursor
+          type: "number"
+          required: true
+        - in: query
+          name: take
+          type: "number"
+          required: false
+        - in: query
+          name: fetchNewer
+          type: "boolean"
+          required: false
+        - in: query
+          name: fetchOlder
+          type: "boolean"
+          required: false
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              list:
                 type: "object"
-            createdAt:
-                type: "integer"
-                format: "int32"
-            modifiedAt:
-                type: "integer"
-                format: "int32"
-            localId:
-                type: "string"
-            replyId:
-                type: "integer"
-                format: "int32"
-            deleted:
+                properties:
+                  messageId:
+                    type: "integer"
+                    format: "integer"
+                  type:
+                    type: "string"
+                    format: "string"
+                  body:
+                    type: "object"
+                  userId:
+                    type: "integer"
+                    format: "string"
+                  username:
+                    type: "string"
+                    format: "string"
+                  date:
+                    type: "string"
+                    format: "date"
+              hasMoreOlderImages:
                 type: "boolean"
-            isForwarded:
+                format: "boolean"
+              hasMoreNewerImages:
                 type: "boolean"
-    MessageRecord:
-        type: "object"
-        properties:
-            id:
-                type: "integer"
-                format: "int32"
-            messageId:
-                type: "integer"
-                format: "int32"
-            userId:
-                type: "integer"
-                format: "int32"
-            roomId:
-                type: "integer"
-                format: "int32"
-            type:
+                format: "boolean"
+        "400":
+          description: "invalid param"
+        "500":
+          description: "server error"
+
+  /messenger/group-message-rooms:
+    get:
+      tags:
+        - "Room"
+      summary: "Get group message rooms"
+      description: "Get group message rooms"
+      parameters:
+        - in: query
+          name: keyword
+          type: "string"
+          required: true
+        - in: query
+          name: cursor
+          type: "number"
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              groupMessageRoomList:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Room"
+              count:
+                type: "number"
+                format: "number"
+              limit:
+                type: "number"
+                format: "number"
+              nextCursor:
+                type: "number"
+                format: "number"
+        "500":
+          description: "server error"
+
+  /messenger/recent-chats:
+    get:
+      tags:
+        - "Room"
+      summary: "Get recent chats"
+      description: "Get recent chats"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              recentUserChats:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Room"
+              recentGroupChats:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Room"
+        "500":
+          description: "server error"
+
+  /messenger/messages/get-thumbnail:
+    get:
+      tags:
+        - "Link Thumbnail"
+      summary: "Get thumbnail for link"
+      description: "Get thumbnail for link"
+      parameters:
+        - in: query
+          name: url
+          type: "string"
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              thumbnailData:
+                properties:
+                  title:
+                    type: "string"
+                  description:
+                    type: "string"
+                  image:
+                    type: "string"
+                  icon:
+                    type: "string"
+                  url:
+                    type: "string"
+        "404":
+          description: "No thumbnail found"
+        "500":
+          description: "server error"
+
+  /messenger/messages/roomId/{roomId}/oldest-message-date:
+    get:
+      tags:
+        - "Message"
+      summary: "Get oldest room message date"
+      description: "Get oldest room message date"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              messageDate:
                 type: "string"
-            reaction:
-                type: "string"
-            createdAt:
-                type: "integer"
-                format: "int32"
-            modifiedAt:
-                type: "integer"
-                format: "int32"
-            isDeleted:
+                format: "date"
+        "404":
+          description: "No room found"
+        "500":
+          description: "server error"
+
+  /messenger/messages/roomId/{roomId}/target-message-batch:
+    get:
+      tags:
+        - "Message"
+      summary: "Get message batch by target message"
+      description: "Get message batch by target message"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+        - in: query
+          name: targetMessageId
+          type: "number"
+          required: true
+        - in: query
+          name: cursorUp
+          type: "number"
+          required: false
+        - in: query
+          name: cursorDown
+          type: "number"
+          required: false
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              list:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Message"
+              nextCursorUp:
+                type: "number"
+              nextCursorDown:
+                type: "number"
+              hasMoreOlderMessages:
                 type: "boolean"
-    Webhook:
-        type: "object"
-        properties:
-            id:
-                type: "integer"
-                format: "int32"
-            roomId:
-                type: "integer"
-                format: "int32"
-            url:
-                type: "string"
-            verifySignature:
-                type: "string"
-            createdAt:
-                type: "integer"
-                format: "int32"
-            modifiedAt:
-                type: "integer"
-                format: "int32"
-    ApiKey:
-        type: "object"
-        properties:
-            id:
-                type: "integer"
-                format: "int32"
+              hasMoreNewerMessages:
+                type: "boolean"
+        "404":
+          description: "Not found"
+        "500":
+          description: "server error"
+
+  /messenger/messages/roomId/{roomId}/target-message-id-by-date:
+    get:
+      tags:
+        - "Message"
+      summary: "Get target message id by date"
+      description: "Get target message id by date"
+      parameters:
+        - in: path
+          name: roomId
+          type: "number"
+          required: true
+        - in: query
+          name: date
+          type: "string"
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              targetMessageId:
+                type: "number"
+        "400":
+          description: "Invalid date"
+        "404":
+          description: "Not found"
+        "500":
+          description: "server error"
+
+  /messenger/messages/search:
+    get:
+      tags:
+        - "Message"
+      summary: "Get searched messages"
+      description: "Get searched messages"
+      parameters:
+        - in: query
+          name: roomId
+          type: "number"
+          required: true
+        - in: query
+          name: keyword
+          type: "string"
+          required: true
+        - in: query
+          name: itemsPerBatch
+          type: "number"
+          required: true
+        - in: query
+          name: cursor
+          type: "number"
+          required: false
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              list:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    id:
+                      type: "number"
+                    messageId:
+                      type: "number"
+                    type:
+                      type: "string"
+                    body:
+                      type: "object"
+                    userId:
+                      type: "number"
+                    username:
+                      type: "string"
+                    date:
+                      type: "string"
+                      format: "date"
+              count:
+                type: "number"
+        "400":
+          description: "Wrong parameters"
+        "404":
+          description: "Not found"
+        "500":
+          description: "server error"
+
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "accesstoken"
+    in: "header"
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      displayName:
+        type: "string"
+        format: "string"
+      avatarFileId:
+        type: "integer"
+        format: "int32"
+      telephoneNumber:
+        type: "string"
+        format: "string"
+      telephoneNumberHashed:
+        type: "string"
+        format: "string"
+      emailAddress:
+        type: "string"
+        format: "string"
+      createdAt:
+        type: "integer"
+        format: "int32"
+      modifiedAt:
+        type: "integer"
+        format: "int32"
+      verified:
+        type: "boolean"
+      deleted:
+        type: "boolean"
+      isBot:
+        type: "boolean"
+  Device:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      userId:
+        type: "integer"
+        format: "int32"
+      token:
+        type: "string"
+        format: "string"
+      tokenExpiredAt:
+        type: "integer"
+        format: "int32"
+      osName:
+        type: "string"
+        format: "string"
+      osVersion:
+        type: "integer"
+        format: "int32"
+      appVersion:
+        type: "integer"
+        format: "int32"
+      pushToken:
+        type: "string"
+        format: "string"
+  File:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      fileName:
+        type: "string"
+      size:
+        type: "integer"
+        format: "int32"
+      mimeType:
+        type: "string"
+      type:
+        type: "string"
+      metaData:
+        type: "string"
+        description: "JSON value containing duration, width, height"
+      relationId:
+        type: "integer"
+        format: "int32"
+      clientId:
+        type: "integer"
+        format: "int32"
+      createdAt:
+        type: "integer"
+        format: "int32"
+  Room:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      name:
+        type: "string"
+      users:
+        type: "array"
+        items:
+          type: "object"
+          properties:
             userId:
-                type: "integer"
-                format: "int32"
-            displayName:
-                type: "string"
-                format: "string"
-            avatarFileId:
-                type: "integer"
-                format: "int32"
+              type: "integer"
+              format: "int32"
             roomId:
-                type: "integer"
-                format: "int32"
-            token:
-                type: "string"
-            createdAt:
-                type: "integer"
-                format: "int32"
-            modifiedAt:
-                type: "integer"
-                format: "int32"
-    Block:
+              type: "integer"
+              format: "int32"
+            isAdmin:
+              type: boolean
+            user:
+              type: "object"
+              $ref: "#/definitions/User"
+      avatarFileId:
+        type: "integer"
+        format: "int32"
+      muted:
+        type: "boolean"
+      pinned:
+        type: "boolean"
+      deleted:
+        type: "boolean"
+      type:
+        type: "string"
+      unreadCount:
+        type: "integer"
+        format: "int32"
+      createdAt:
+        type: "integer"
+        format: "int32"
+      modifiedAt:
+        type: "integer"
+        format: "int32"
+  Message:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      roomId:
+        type: "integer"
+        format: "int32"
+      fromUserId:
+        type: "integer"
+        format: "int32"
+      totalUserCount:
+        type: "integer"
+        format: "int32"
+      deliveredCount:
+        type: "integer"
+        format: "int32"
+      seenCount:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      body:
         type: "object"
-        properties:
-            id:
-                type: "integer"
-                format: "int32"
-            userId:
-                type: "integer"
-                format: "int32"
-            blockedId:
-                type: "integer"
-                format: "int32"
-    Note:
-        type: "object"
-        properties:
-            id:
-                type: "integer"
-                format: "int32"
-            title:
-                type: "string"
-            content:
-                type: "string"
-            roomId:
-                type: "integer"
-                format: "int32"
-            createdAt:
-                type: "integer"
-                format: "int32"
-            modifiedAt:
-                type: "integer"
-                format: "int32"
+      createdAt:
+        type: "integer"
+        format: "int32"
+      modifiedAt:
+        type: "integer"
+        format: "int32"
+      localId:
+        type: "string"
+      replyId:
+        type: "integer"
+        format: "int32"
+      deleted:
+        type: "boolean"
+      isForwarded:
+        type: "boolean"
+  MessageRecord:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      messageId:
+        type: "integer"
+        format: "int32"
+      userId:
+        type: "integer"
+        format: "int32"
+      roomId:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      reaction:
+        type: "string"
+      createdAt:
+        type: "integer"
+        format: "int32"
+      modifiedAt:
+        type: "integer"
+        format: "int32"
+      isDeleted:
+        type: "boolean"
+  Webhook:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      roomId:
+        type: "integer"
+        format: "int32"
+      url:
+        type: "string"
+      verifySignature:
+        type: "string"
+      createdAt:
+        type: "integer"
+        format: "int32"
+      modifiedAt:
+        type: "integer"
+        format: "int32"
+  ApiKey:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      userId:
+        type: "integer"
+        format: "int32"
+      displayName:
+        type: "string"
+        format: "string"
+      avatarFileId:
+        type: "integer"
+        format: "int32"
+      roomId:
+        type: "integer"
+        format: "int32"
+      token:
+        type: "string"
+      createdAt:
+        type: "integer"
+        format: "int32"
+      modifiedAt:
+        type: "integer"
+        format: "int32"
+  Block:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      userId:
+        type: "integer"
+        format: "int32"
+      blockedId:
+        type: "integer"
+        format: "int32"
+  Note:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      title:
+        type: "string"
+      content:
+        type: "string"
+      roomId:
+        type: "integer"
+        format: "int32"
+      createdAt:
+        type: "integer"
+        format: "int32"
+      modifiedAt:
+        type: "integer"
+        format: "int32"
 
 externalDocs:
-    description: "Find out more about Swagger"
-    url: "http://swagger.io/terms"
+  description: "Find out more about Swagger"
+  url: "http://swagger.io/terms"
